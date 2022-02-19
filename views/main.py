@@ -14,7 +14,6 @@ from .base import *
 from simpleDialog import *
 
 from views import globalKeyConfig
-from views import channels
 from views import settingsDialog
 from views import versionDialog
 import calmradio.main
