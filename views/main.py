@@ -187,10 +187,10 @@ class Events(BaseEvents):
 		if type(item) != calmradio.main.Channel:
 			self.parent.description.Disable()
 			self.parent.playButton.Disable()
-		else:
-			self.parent.description.Enable()
-			self.parent.description.SetValue(item.getDescription())
-			self.parent.playButton.Enable()
+			return
+		self.parent.description.Enable()
+		self.parent.description.SetValue(item.getDescription())
+		self.parent.playButton.Enable()
 
 	def onChannelActivated(self, event):
 		item = self.parent.treeItems[self.parent.tree.GetFocusedItem()]
