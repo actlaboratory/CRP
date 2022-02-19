@@ -8,6 +8,7 @@ import wx
 import constants
 import globalVars
 import menuItemsStore
+import update
 
 from .base import *
 from simpleDialog import *
@@ -123,7 +124,7 @@ class Events(BaseEvents):
 				self.parent.menu.Apply(self.parent.hFrame)
 
 		if selected == menuItemsStore.getRef("HELP_UPDATE"):
-			globalVars.update.update()
+			update.checkUpdate()
 
 		if selected == menuItemsStore.getRef("HELP_VERSIONINFO"):
 			d = versionDialog.dialog()
