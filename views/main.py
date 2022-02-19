@@ -60,7 +60,6 @@ class MainView(BaseView):
 		self.stopButton = self.creator.button(_("停止(&S)"), self.events.onStopButton)
 		self.stopButton.Disable()
 		self.volume, tmp = self.creator.slider(_("音量(&V)"), event=self.events.onVolumeChanged, style=wx.SL_VERTICAL, defaultValue=self.app.config.getint("play", "volume", 100, 0, 100))
-		self.volume.Disable()
 		# 初期値を再生に反映
 		self.events.onVolumeChanged()
 
@@ -203,9 +202,7 @@ class Events(BaseEvents):
 		globalVars.app.player.setPlaybackUrl(streams["free_128"])
 		globalVars.app.player.play()
 		self.parent.stopButton.Enable()
-		self.parent.volume.Enable()
 
 	def onStopButton(self, event):
 		globalVars.app.player.stop()
 		self.parent.stopButton.Disable()
-		self.parent.volume.Disable()
