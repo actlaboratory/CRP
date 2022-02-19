@@ -56,6 +56,8 @@ class MainView(BaseView):
 		self.description.Bind(wx.EVT_TEXT_ENTER, self.events.onChannelActivated)
 		self.playButton = self.creator.button(_("このチャンネルを再生(&P)"), self.events.onChannelActivated)
 		# playback controls
+		self.stopButton = self.creator.button(_("停止(&S)"), self.events.onStopButton)
+		self.stopButton.Disable()
 		self.volume, tmp = self.creator.slider(_("音量(&V)"), event=self.events.onVolumeChanged, style=wx.SL_VERTICAL, defaultValue=self.app.config.getint("play", "volume", 100, 0, 100))
 		# 初期値を再生に反映
 		self.events.onVolumeChanged()
@@ -196,4 +198,8 @@ class Events(BaseEvents):
 			return
 		globalVars.app.player.setPlaybackUrl(streams["free_128"])
 		globalVars.app.player.play()
+		self.parent.stopButton.Enable()
 
+	def onStopButton(self, event):
+		globalVars.app.player.stop()
+		self.parent.stopButton.Disable()
