@@ -60,6 +60,7 @@ class MainView(BaseView):
 		self.stopButton = self.creator.button(_("停止(&S)"), self.events.onStopButton)
 		self.stopButton.Disable()
 		self.volume, tmp = self.creator.slider(_("音量(&V)"), event=self.events.onVolumeChanged, style=wx.SL_VERTICAL, defaultValue=self.app.config.getint("play", "volume", 100, 0, 100))
+		self.deviceButton = self.creator.button(_("再生デバイスの変更(&D)"), self.events.onDeviceButtonPressed)
 		# 初期値を再生に反映
 		self.events.onVolumeChanged()
 
@@ -205,3 +206,19 @@ class Events(BaseEvents):
 	def onStopButton(self, event):
 		globalVars.app.player.stop()
 		self.parent.stopButton.Disable()
+
+	def onDeviceButtonPressed(self, event):
+		devices = globalVars.app.player.getDeviceList()
+		menu = wx.Menu()
+		for i in range(len(devices)):
+			menu.AppendCheckItem(i, devices[i])
+		current = self.parent.app.config["play"]["device"]
+		if current and (current in devices):
+			menu.Check(devices.index(current), True)
+		else:
+			menu.Check(devices.index(_("規定のデバイス")), True)
+		ret = self.parent.deviceButton.GetPopupMenuSelectionFromUser(menu)
+		name = devices[ret]
+		if name == _("規定のデバイス"):
+			name = ""
+		globalVars.app.player.setDevice(name)

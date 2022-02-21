@@ -32,6 +32,7 @@ class DefaultSettings:
 		}
 		config["play"] = {
 			"volume": 100,
+			"device": "",
 		}
 		return config
 

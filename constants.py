@@ -20,8 +20,8 @@ APP_COPYRIGHT_MESSAGE = "Copyright (c) %s %s All lights reserved." % (APP_COPYRI
 SUPPORTING_LANGUAGE={"ja-JP": "日本語","en-US": "English"}
 
 #各種ファイル名
-LOG_PREFIX="app"
-LOG_FILE_NAME="application.log"
+LOG_PREFIX="crp"
+LOG_FILE_NAME="crp.log"
 SETTING_FILE_NAME="settings.ini"
 KEYMAP_FILE_NAME="keymap.ini"
 
