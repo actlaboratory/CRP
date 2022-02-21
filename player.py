@@ -2,11 +2,14 @@
 
 from soundPlayer import player
 from soundPlayer.constants import *
+import globalVars
+from ConfigManager import ConfigManager
 
 
 class Player:
 	def __init__(self):
 		self._player = player.player()
+		self.config: ConfigManager = globalVars.app.config
 
 	def exit(self):
 		self._player.exit()
@@ -21,7 +24,10 @@ class Player:
 		return self._player.stop()
 
 	def setVolume(self, value):
-		return self._player.setVolume(value)
+		result = self._player.setVolume(value)
+		if result:
+			self.config["play"]["volume"] = value
+		return result
 
 	def getVolume(self):
 		return self._player.getConfig(PLAYER_CONFIG_VOLUME)

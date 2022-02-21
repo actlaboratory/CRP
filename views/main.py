@@ -179,7 +179,6 @@ class Events(BaseEvents):
 	def onVolumeChanged(self, event=None):
 		value = self.parent.volume.GetValue()
 		self.parent.app.player.setVolume(value)
-		self.parent.app.config["play"]["volume"] = value
 
 	def onChannelSelected(self, event):
 		item = self.parent.treeItems[self.parent.tree.GetFocusedItem()]
