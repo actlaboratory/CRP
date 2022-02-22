@@ -17,6 +17,7 @@ from views import globalKeyConfig
 from views import settingsDialog
 from views import versionDialog
 import calmradio.main
+from nowPlayingChecker import NowPlayingChecker
 
 
 class MainView(BaseView):
@@ -61,6 +62,13 @@ class MainView(BaseView):
 		self.stopButton.Disable()
 		self.volume, tmp = self.creator.slider(_("音量(&V)"), event=self.events.onVolumeChanged, style=wx.SL_VERTICAL, defaultValue=self.app.config.getint("play", "volume", 100, 0, 100))
 		self.deviceButton = self.creator.button(_("再生デバイスの変更(&D)"), self.events.onDeviceButtonPressed)
+		# now playing
+		self.nowPlaying, tmp = self.creator.listCtrl(_("現在再生中(&N)"))
+		self.nowPlaying.AppendColumn(_("項目"))
+		self.nowPlaying.AppendColumn(_("内容"))
+		self.nowPlaying.Append([_("タイトル"), ""])
+		self.nowPlaying.Append([_("アーティスト"), ""])
+		self.nowPlaying.Append([_("アルバム"), ""])
 		# 初期値を再生に反映
 		self.events.onVolumeChanged()
 
@@ -101,6 +109,10 @@ class Menu(BaseMenu):
 
 
 class Events(BaseEvents):
+	def __init__(self, parent, identifier):
+		super().__init__(parent, identifier)
+		self.nowPlayingChecker = None
+
 	def OnMenuSelect(self, event):
 		"""メニュー項目が選択されたときのイベントハンドら。"""
 		# ショートカットキーが無効状態のときは何もしない
@@ -196,6 +208,10 @@ class Events(BaseEvents):
 			errorDialog(_("このチャンネルは、フリー版ではご利用いただけません。"))
 			return
 		globalVars.app.player.setPlaybackUrl(streams["free_128"])
+		if self.nowPlayingChecker:
+			self.nowPlayingChecker.exit()
+		self.nowPlayingChecker = NowPlayingChecker(item.getRecentTracks()["free"], self.onNowPlayingChanged, self.onNowPlayingExit)
+		self.nowPlayingChecker.start()
 		globalVars.app.player.play()
 		self.parent.stopButton.Enable()
 
@@ -218,3 +234,13 @@ class Events(BaseEvents):
 		if name == _("規定のデバイス"):
 			name = ""
 		globalVars.app.player.setDevice(name)
+
+	def onNowPlayingChanged(self, data):
+		self.parent.nowPlaying.SetItem(0, 1, data["title"])
+		self.parent.nowPlaying.SetItem(1, 1, data["artist"])
+		self.parent.nowPlaying.SetItem(2, 1, data["album"])
+
+	def onNowPlayingExit(self):
+		self.parent.nowPlaying.SetItem(0, 1, "")
+		self.parent.nowPlaying.SetItem(1, 1, "")
+		self.parent.nowPlaying.SetItem(2, 1, "")

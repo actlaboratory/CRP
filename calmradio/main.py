@@ -44,3 +44,6 @@ class Channel:
 
     def getDescription(self):
         return self._data["description"]
+
+    def getRecentTracks(self):
+        return self._data["recent_tracks"]
