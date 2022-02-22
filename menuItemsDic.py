@@ -11,8 +11,6 @@ def getValueString(ref_id):
 
 
 dic = {
-	"FILE_CHANNELS": _("チャンネルリストを標示") + "...",
-
 	"OPTION_OPTION": _("オプション(&O)") + "...",
 	"OPTION_KEY_CONFIG": _("ショートカットキーの設定(&K)") + "...",
 
