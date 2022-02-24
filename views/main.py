@@ -124,6 +124,7 @@ class Events(BaseEvents):
 	def __init__(self, parent, identifier):
 		super().__init__(parent, identifier)
 		self.nowPlayingChecker = None
+		self.playbackStatusChecker = None
 
 	def OnMenuSelect(self, event):
 		"""メニュー項目が選択されたときのイベントハンドら。"""
@@ -236,7 +237,10 @@ class Events(BaseEvents):
 		self.nowPlayingChecker = NowPlayingChecker(item.getRecentTracks()["free"], self.onNowPlayingChanged, self.onNowPlayingExit)
 		self.nowPlayingChecker.start()
 		globalVars.app.player.play()
-		PlaybackStatusChecker(self.parent.app.player, self.onStopButton).start()
+		if self.playbackStatusChecker:
+			self.playbackStatusChecker.exit()
+		self.playbackStatusChecker = PlaybackStatusChecker(self.parent.app.player, self.onStopButton)
+		self.playbackStatusChecker.start()
 		self.parent.stopButton.Enable()
 		self.parent.menu.EnableMenu("PLAY_STOP", True)
 

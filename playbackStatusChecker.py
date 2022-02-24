@@ -21,10 +21,11 @@ class PlaybackStatusChecker(threading.Thread):
         self._player = player
         self.onStop = onStop
         self.log = logging.getLogger("%s.%s" % (constants.LOG_PREFIX, "playStatusChecker"))
+        self.running = False
 
     def run(self):
         self.log.debug("started")
-        while True:
+        while self.running:
             status = self._player.getPlayer().getStatus()
             self.log.debug("status: %s" % status)
             if status == PLAYER_STATUS_DEVICEERROR:
@@ -46,4 +47,7 @@ class PlaybackStatusChecker(threading.Thread):
                 wx.CallAfter(self.onStop)
                 break
             time.sleep(interval)
+
+    def exit(self):
+        self.running = False
         self.log.debug("exitting...")
