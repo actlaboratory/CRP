@@ -18,6 +18,7 @@ from views import settingsDialog
 from views import versionDialog
 import calmradio.main
 from nowPlayingChecker import NowPlayingChecker
+from playbackStatusChecker import PlaybackStatusChecker
 
 
 class MainView(BaseView):
@@ -213,10 +214,13 @@ class Events(BaseEvents):
 		self.nowPlayingChecker = NowPlayingChecker(item.getRecentTracks()["free"], self.onNowPlayingChanged, self.onNowPlayingExit)
 		self.nowPlayingChecker.start()
 		globalVars.app.player.play()
+		PlaybackStatusChecker(self.parent.app.player, self.onStopButton).start()
 		self.parent.stopButton.Enable()
 
-	def onStopButton(self, event):
-		globalVars.app.player.stop()
+	def onStopButton(self, event=None):
+		if event:
+			# command event
+			globalVars.app.player.stop()
 		self.parent.stopButton.Disable()
 
 	def onDeviceButtonPressed(self, event):

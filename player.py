@@ -58,3 +58,6 @@ class Player:
 			result = self._player.setDevice(PLAYER_DEFAULT_SPEAKER)
 		if result:
 			self.config["play"]["device"] = name
+
+	def getPlayer(self):
+		return self._player
