@@ -83,12 +83,17 @@ class Menu(BaseMenu):
 
 		# メニューの大項目を作る
 		self.hFileMenu = wx.Menu()
+		self.hPlayMenu = wx.Menu()
 		self.hOptionMenu = wx.Menu()
 		self.hHelpMenu = wx.Menu()
 
 		# ファイルメニュー
 		self.RegisterMenuCommand(self.hFileMenu, [
 			"FILE_EXIT",
+		])
+
+		# 再生メニュー
+		self.RegisterMenuCommand(self.hPlayMenu, [
 		])
 
 		# オプションメニュー
@@ -105,6 +110,7 @@ class Menu(BaseMenu):
 
 		# メニューバーの生成
 		self.hMenuBar.Append(self.hFileMenu, _("ファイル(&F))"))
+		self.hMenuBar.Append(self.hPlayMenu, _("再生(&P)"))
 		self.hMenuBar.Append(self.hOptionMenu, _("オプション(&O)"))
 		self.hMenuBar.Append(self.hHelpMenu, _("ヘルプ(&H)"))
 		target.SetMenuBar(self.hMenuBar)
