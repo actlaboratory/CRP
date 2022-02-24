@@ -57,11 +57,12 @@ class MainView(BaseView):
 		self.description.Disable()
 		self.description.Bind(wx.EVT_TEXT_ENTER, self.events.onChannelActivated)
 		# playback controls
-		self.playButton = self.creator.button(_("選択中のチャンネルを再生(&P)"), self.events.onChannelActivated)
+		self.playButton = self.creator.button(_("選択中のチャンネルを再生"), self.events.onChannelActivated)
 		self.playButton.Disable()
 		self.menu.EnableMenu("PLAY_PLAY", False)
 		self.stopButton = self.creator.button(_("停止(&S)"), self.events.onStopButton)
 		self.stopButton.Disable()
+		self.menu.EnableMenu("PLAY_STOP", False)
 		self.volume, tmp = self.creator.slider(_("音量(&V)"), event=self.events.onVolumeChanged, style=wx.SL_VERTICAL, defaultValue=self.app.config.getint("play", "volume", 100, 0, 100))
 		self.deviceButton = self.creator.button(_("再生デバイスの変更(&D)"), self.events.onDeviceButtonPressed)
 		# now playing
@@ -96,6 +97,7 @@ class Menu(BaseMenu):
 		# 再生メニュー
 		self.RegisterMenuCommand(self.hPlayMenu, [
 			"PLAY_PLAY",
+			"PLAY_STOP",
 		])
 
 		# オプションメニュー
@@ -137,6 +139,9 @@ class Events(BaseEvents):
 
 		if selected == menuItemsStore.getRef("PLAY_PLAY"):
 			self.onChannelActivated(event)
+
+		if selected == menuItemsStore.getRef("PLAY_STOP"):
+			self.onStopButton(event)
 
 		if selected == menuItemsStore.getRef("OPTION_OPTION"):
 			d = settingsDialog.Dialog()
@@ -233,12 +238,14 @@ class Events(BaseEvents):
 		globalVars.app.player.play()
 		PlaybackStatusChecker(self.parent.app.player, self.onStopButton).start()
 		self.parent.stopButton.Enable()
+		self.parent.menu.EnableMenu("PLAY_STOP", True)
 
 	def onStopButton(self, event=None):
 		if event:
 			# command event
 			globalVars.app.player.stop()
 		self.parent.stopButton.Disable()
+		self.parent.menu.EnableMenu("PLAY_STOP", False)
 
 	def onDeviceButtonPressed(self, event):
 		devices = globalVars.app.player.getDeviceList()
