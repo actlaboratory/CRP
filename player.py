@@ -52,6 +52,7 @@ class Player:
 				# デバイスが見つからなかった
 				self.log.debug("device %s could not be found" % name)
 				result = self._player.setDevice(PLAYER_DEFAULT_SPEAKER)
+				name = ""
 		else:
 			self.log.debug("set to default device")
 			result = self._player.setDevice(PLAYER_DEFAULT_SPEAKER)
