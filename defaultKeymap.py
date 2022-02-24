@@ -5,7 +5,7 @@
 defaultKeymap = {}
 
 defaultKeymap["mainView"] = {
-	"FILE_CHANNELS": "ctrl+n",
+	"PLAY_PLAY": "ctrl+p",
 
 	"OPTION_OPTION": "",
 	"OPTION_KEY_CONFIG": "",

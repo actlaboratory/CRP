@@ -13,6 +13,8 @@ def getValueString(ref_id):
 dic = {
 	"FILE_EXIT": _("終了(&X)"),
 
+	"PLAY_PLAY": _("選択中のチャンネルを再生(&P)"),
+
 	"OPTION_OPTION": _("オプション(&O)") + "...",
 	"OPTION_KEY_CONFIG": _("ショートカットキーの設定(&K)") + "...",
 

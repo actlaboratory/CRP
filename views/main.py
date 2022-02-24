@@ -57,8 +57,9 @@ class MainView(BaseView):
 		self.description.Disable()
 		self.description.Bind(wx.EVT_TEXT_ENTER, self.events.onChannelActivated)
 		# playback controls
-		self.playButton = self.creator.button(_("このチャンネルを再生(&P)"), self.events.onChannelActivated)
+		self.playButton = self.creator.button(_("選択中のチャンネルを再生(&P)"), self.events.onChannelActivated)
 		self.playButton.Disable()
+		self.menu.EnableMenu("PLAY_PLAY", False)
 		self.stopButton = self.creator.button(_("停止(&S)"), self.events.onStopButton)
 		self.stopButton.Disable()
 		self.volume, tmp = self.creator.slider(_("音量(&V)"), event=self.events.onVolumeChanged, style=wx.SL_VERTICAL, defaultValue=self.app.config.getint("play", "volume", 100, 0, 100))
@@ -94,6 +95,7 @@ class Menu(BaseMenu):
 
 		# 再生メニュー
 		self.RegisterMenuCommand(self.hPlayMenu, [
+			"PLAY_PLAY",
 		])
 
 		# オプションメニュー
@@ -132,6 +134,9 @@ class Events(BaseEvents):
 
 		if selected == menuItemsStore.getRef("FILE_EXIT"):
 			self.parent.hFrame.Close()
+
+		if selected == menuItemsStore.getRef("PLAY_PLAY"):
+			self.onChannelActivated(event)
 
 		if selected == menuItemsStore.getRef("OPTION_OPTION"):
 			d = settingsDialog.Dialog()
@@ -205,10 +210,12 @@ class Events(BaseEvents):
 		if type(item) != calmradio.main.Channel:
 			self.parent.description.Disable()
 			self.parent.playButton.Disable()
+			self.parent.menu.EnableMenu("PLAY_PLAY", False)
 			return
 		self.parent.description.Enable()
 		self.parent.description.SetValue(item.getDescription())
 		self.parent.playButton.Enable()
+		self.parent.menu.EnableMenu("PLAY_PLAY", True)
 
 	def onChannelActivated(self, event):
 		item = self.parent.treeItems[self.parent.tree.GetFocusedItem()]
