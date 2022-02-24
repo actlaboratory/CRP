@@ -88,6 +88,7 @@ class Menu(BaseMenu):
 
 		# ファイルメニュー
 		self.RegisterMenuCommand(self.hFileMenu, [
+			"FILE_EXIT",
 		])
 
 		# オプションメニュー
@@ -122,6 +123,9 @@ class Events(BaseEvents):
 			return
 
 		selected = event.GetId()  # メニュー識別しの数値が出る
+
+		if selected == menuItemsStore.getRef("FILE_EXIT"):
+			self.parent.hFrame.Close()
 
 		if selected == menuItemsStore.getRef("OPTION_OPTION"):
 			d = settingsDialog.Dialog()

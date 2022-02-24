@@ -11,6 +11,8 @@ def getValueString(ref_id):
 
 
 dic = {
+	"FILE_EXIT": _("終了(&X)"),
+
 	"OPTION_OPTION": _("オプション(&O)") + "...",
 	"OPTION_KEY_CONFIG": _("ショートカットキーの設定(&K)") + "...",
 
