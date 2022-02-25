@@ -50,7 +50,7 @@ class MainView(BaseView):
 			category = self.tree.AppendItem(root, k.getName())
 			self.treeItems[category] = k
 			for i in v:
-				channel = self.tree.AppendItem(category, i.getName().replace("CALMRADIO - ", ""))
+				channel = self.tree.AppendItem(category, i.getName())
 				self.treeItems[channel] = i
 		self.tree.Expand(root)
 		self.description, tmp = self.creator.inputbox(_("説明"), style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_PROCESS_ENTER)
@@ -72,6 +72,7 @@ class MainView(BaseView):
 		self.nowPlaying.Append([_("タイトル"), ""])
 		self.nowPlaying.Append([_("アーティスト"), ""])
 		self.nowPlaying.Append([_("アルバム"), ""])
+		self.nowPlaying.Append([_("チャンネル"), ""])
 		# 初期値を再生に反映
 		self.events.onVolumeChanged()
 
@@ -243,6 +244,7 @@ class Events(BaseEvents):
 		self.playbackStatusChecker.start()
 		self.parent.stopButton.Enable()
 		self.parent.menu.EnableMenu("PLAY_STOP", True)
+		self.parent.nowPlaying.SetItem(3, 1, item.getName())
 
 	def onStopButton(self, event=None):
 		if event:

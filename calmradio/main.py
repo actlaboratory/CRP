@@ -37,7 +37,7 @@ class Channel:
         self._data = data
 
     def getName(self):
-        return self._data["title"]
+        return self._data["title"].replace("CALMRADIO - ", "")
 
     def getStreams(self):
         return self._data["streams"]
