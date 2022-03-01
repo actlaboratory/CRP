@@ -11,6 +11,7 @@ def getValueString(ref_id):
 
 
 dic = {
+	"FILE_REFRESH_CHANNELS": _("チャンネル一覧を更新(&R)"),
 	"FILE_EXIT": _("終了(&X)"),
 
 	"PLAY_PLAY": _("選択中のチャンネルを再生(&P)"),

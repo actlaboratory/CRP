@@ -39,20 +39,9 @@ class MainView(BaseView):
 
 	def InstallControls(self):
 		# channels
-		self.chanels = self.app.calmradio.getAllChannels()
-		self.treeItems = {}
 		self.tree, tmp = self.creator.treeCtrl(_("チャンネル一覧(&C)"))
 		self.tree.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.events.onChannelActivated)
 		self.tree.Bind(wx.EVT_TREE_SEL_CHANGED, self.events.onChannelSelected)
-		root = self.tree.AddRoot(_("チャンネル"))
-		self.treeItems[root] = None
-		for k, v in self.chanels.items():
-			category = self.tree.AppendItem(root, k.getName())
-			self.treeItems[category] = k
-			for i in v:
-				channel = self.tree.AppendItem(category, i.getName())
-				self.treeItems[channel] = i
-		self.tree.Expand(root)
 		self.description, tmp = self.creator.inputbox(_("説明"), style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_PROCESS_ENTER)
 		self.description.Disable()
 		self.description.Bind(wx.EVT_TEXT_ENTER, self.events.onChannelActivated)
@@ -75,7 +64,23 @@ class MainView(BaseView):
 		self.nowPlaying.Append([_("チャンネル"), ""])
 		# 初期値を再生に反映
 		self.events.onVolumeChanged()
+		# get channels data
+		self.refreshChannels()
 
+	def refreshChannels(self):
+		self.tree.DeleteAllItems()
+		self.chanels = self.app.calmradio.getAllChannels()
+		self.treeItems = {}
+		root = self.tree.AddRoot(_("チャンネル"))
+		self.treeItems[root] = None
+		for k, v in self.chanels.items():
+			category = self.tree.AppendItem(root, k.getName())
+			self.treeItems[category] = k
+			for i in v:
+				channel = self.tree.AppendItem(category, i.getName())
+				self.treeItems[channel] = i
+		self.tree.Expand(root)
+		self.tree.SelectItem(root)
 
 class Menu(BaseMenu):
 	def Apply(self, target):
@@ -92,6 +97,7 @@ class Menu(BaseMenu):
 
 		# ファイルメニュー
 		self.RegisterMenuCommand(self.hFileMenu, [
+			"FILE_REFRESH_CHANNELS",
 			"FILE_EXIT",
 		])
 
@@ -135,6 +141,9 @@ class Events(BaseEvents):
 			return
 
 		selected = event.GetId()  # メニュー識別しの数値が出る
+
+		if selected == menuItemsStore.getRef("FILE_REFRESH_CHANNELS"):
+			self.parent.refreshChannels()
 
 		if selected == menuItemsStore.getRef("FILE_EXIT"):
 			self.parent.hFrame.Close()
