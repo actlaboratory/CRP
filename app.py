@@ -26,6 +26,7 @@ class Main(AppBase.MainBase):
 		self.calmradio = Calmradio()
 		self.player = Player()
 		self.hMainView = main.MainView()
+		self.hMainView.refreshChannels()
 		self.hMainView.Show()
 		return True
 

@@ -15,6 +15,7 @@ from simpleDialog import *
 
 from views import globalKeyConfig
 from views import settingsDialog
+from views import refresh
 from views import versionDialog
 import calmradio.main
 from nowPlayingChecker import NowPlayingChecker
@@ -64,10 +65,11 @@ class MainView(BaseView):
 		self.nowPlaying.Append([_("チャンネル"), ""])
 		# 初期値を再生に反映
 		self.events.onVolumeChanged()
-		# get channels data
-		self.refreshChannels()
 
 	def refreshChannels(self):
+		d = refresh.Dialog()
+		d.Initialize()
+		d.Show(False)
 		self.tree.DeleteAllItems()
 		self.chanels = self.app.calmradio.getAllChannels()
 		self.treeItems = {}
@@ -80,6 +82,7 @@ class MainView(BaseView):
 				channel = self.tree.AppendItem(category, i.getName())
 				self.treeItems[channel] = i
 		self.tree.Expand(root)
+		d.Destroy()
 		self.tree.SelectItem(root)
 
 class Menu(BaseMenu):
