@@ -20,8 +20,8 @@ class PlaybackStatusChecker(threading.Thread):
         super().__init__(daemon=True)
         self._player = player
         self.onStop = onStop
-        self.log = logging.getLogger("%s.%s" % (constants.LOG_PREFIX, "playStatusChecker"))
-        self.running = False
+        self.log = logging.getLogger("%s.%s" % (constants.LOG_PREFIX, "playbackStatusChecker"))
+        self.running = True
 
     def run(self):
         self.log.debug("started")
