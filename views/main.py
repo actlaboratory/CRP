@@ -236,7 +236,10 @@ class Events(BaseEvents):
 			self.parent.menu.EnableMenu("PLAY_PLAY", False)
 			return
 		self.parent.description.Enable()
-		self.parent.description.SetValue(item.getDescription())
+		description = item.getDescription()
+		if description is None:
+			description = ""
+		self.parent.description.SetValue(description)
 		self.parent.playButton.Enable()
 		self.parent.menu.EnableMenu("PLAY_PLAY", True)
 
