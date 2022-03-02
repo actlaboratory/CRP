@@ -47,3 +47,10 @@ UPDATER_URL = "https://github.com/actlaboratory/updater/releases/download/1.0.0/
 UPDATE_URL = "https://actlab.org/api/checkUpdate"
 UPDATER_VERSION = "1.0.0"
 UPDATER_WAKE_WORD = "hello"
+
+# calm radio
+AVAILABLE_BITRATE = [
+    "64",
+    "192",
+    "320",
+]

@@ -251,8 +251,7 @@ class Events(BaseEvents):
 		self.parent.app.calmradio.auth()
 		if self.parent.app.calmradio.isActive():
 			# premium
-			# dummy
-			bitrate = "320"
+			bitrate = self.parent.app.config.getstring("play", "bitrate", "320", constants.AVAILABLE_BITRATE)
 			url = streams[bitrate]
 			url = url.replace("https://", "https://%s:%s@" % (self.parent.app.calmradio.getUser().replace("@", "%40"), self.parent.app.calmradio.getToken()))
 			recentKey = "vip"

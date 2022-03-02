@@ -33,8 +33,9 @@ class DefaultSettings:
 		config["play"] = {
 			"volume": 100,
 			"device": "",
+			"bitrate": "320",
 		}
-		config["user"]: {
+		config["user"] = {
 			"user": "",
 			"pass": "",
 		}
