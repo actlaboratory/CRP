@@ -26,7 +26,7 @@ class Api:
             return errorCodes.CONNECTION_ERROR
 
     def getCategories(self):
-        return self._getJson("http://api.calmradio.com/categories.json")
+        return self._getJson("https://api.calmradio.com/categories.json")
 
     def getChannels(self):
-        return self._getJson("http://api.calmradio.com/channels.json")
+        return self._getJson("https://api.calmradio.com/channels.json")
