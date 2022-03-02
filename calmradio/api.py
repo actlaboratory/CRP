@@ -15,7 +15,7 @@ class Api:
         self.log.debug("Connecting to %s" % url)
         try:
             response = requests.get(url, *args, **kwargs)
-            self.log.debug("Response: %s" % response.status_code)
+            self.log.debug("code: %s, url: %s" % (response.status_code, response.url))
         except Exception as e:
             self.log.error("Connection error:\n" + traceback.format_exc())
             return errorCodes.CONNECTION_ERROR
