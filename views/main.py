@@ -4,6 +4,7 @@
 # Copyright (C) 2019-2021 yamahubuki <itiro.ishino@gmail.com>
 
 import time
+import urllib.parse
 import wx
 
 import constants
@@ -260,7 +261,6 @@ class Events(BaseEvents):
 			# premium
 			bitrate = self.parent.app.config.getstring("play", "bitrate", "320", constants.AVAILABLE_BITRATE)
 			url = streams[bitrate]
-			url = url.replace("https://", "https://%s:%s@" % (self.parent.app.calmradio.getUser().replace("@", "%40"), self.parent.app.calmradio.getToken()))
 			recentKey = "vip"
 		else:
 			if "free_128" not in streams:
@@ -268,6 +268,8 @@ class Events(BaseEvents):
 				return
 			url = streams["free_128"]
 			recentKey = "free"
+		if self.parent.app.calmradio.getUser():
+			url = url.replace("https://", "https://%s:%s@" % (urllib.parse.quote(self.parent.app.calmradio.getUser()), urllib.parse.quote(self.parent.app.calmradio.getToken())))
 		globalVars.app.player.setPlaybackUrl(url)
 		if self.nowPlayingChecker:
 			self.nowPlayingChecker.exit()
