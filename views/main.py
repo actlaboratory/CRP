@@ -71,15 +71,15 @@ class MainView(BaseView):
 		d.Initialize()
 		d.Show(False)
 		self.tree.DeleteAllItems()
-		self.chanels = self.app.calmradio.getAllChannels()
-		if self.chanels == errorCodes.CONNECTION_ERROR:
+		self.channels = self.app.calmradio.getAllChannels()
+		if self.channels == errorCodes.CONNECTION_ERROR:
 			d.Destroy()
 			errorDialog(_("チャンネル一覧の取得に失敗しました。\nインターネット接続をご確認の上、しばらくたってから再度お試しください。\nこの問題が繰り返し発生する場合は、開発者までご連絡ください。"))
 			return
 		self.treeItems = {}
 		root = self.tree.AddRoot(_("チャンネル"))
 		self.treeItems[root] = None
-		for k, v in self.chanels.items():
+		for k, v in self.channels.items():
 			category = self.tree.AppendItem(root, k.getName())
 			self.treeItems[category] = k
 			for i in v:
