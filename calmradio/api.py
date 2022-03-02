@@ -2,6 +2,7 @@
 
 import constants
 import errorCodes
+import json
 import logging
 import requests
 import traceback
@@ -21,7 +22,7 @@ class Api:
             return errorCodes.CONNECTION_ERROR
         try:
             ret = response.json()
-            self.log.debug("response: %s" % ret)
+            self.log.debug("response:\n%s\n" % json.dumps(ret, ensure_ascii=False, indent="\t"))
             return ret
         except Exception as e:
             self.log.error("Failed to get json data from URL %s. Response: %s" % (url, response.text))
