@@ -1,6 +1,7 @@
 # main module of Calmradio
 
 from calmradio.api import Api
+import errorCodes
 
 class Calmradio:
     def __init__(self):
@@ -9,6 +10,8 @@ class Calmradio:
     def getCategories(self):
         ret = []
         categories = self.api.getCategories()
+        if categories == errorCodes.CONNECTION_ERROR:
+            return errorCodes.CONNECTION_ERROR
         for section in categories:
             ret += section["categories"]
         return [Category(i) for i in ret]
@@ -16,6 +19,8 @@ class Calmradio:
     def getAllChannels(self):
         ret = {}
         channels = self.api.getChannels()
+        if channels == errorCodes.CONNECTION_ERROR:
+            return errorCodes.CONNECTION_ERROR
         for category in self.getCategories():
             for group in channels:
                 if group["category"] == category.getId():
