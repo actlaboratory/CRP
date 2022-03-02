@@ -20,7 +20,9 @@ class Api:
             self.log.error("Connection error:\n" + traceback.format_exc())
             return errorCodes.CONNECTION_ERROR
         try:
-            return response.json()
+            ret = response.json()
+            self.log.debug("response: %s" % ret)
+            return ret
         except Exception as e:
             self.log.error("Failed to get json data from URL %s. Response: %s" % (url, response.text))
             return errorCodes.CONNECTION_ERROR
@@ -30,3 +32,10 @@ class Api:
 
     def getChannels(self):
         return self._getJson("https://api.calmradio.com/channels.json")
+
+    def getToken(self, user, pass_):
+        params = {
+            "user": user,
+            "pass": pass_,
+        }
+        return self._getJson("https://api.calmradio.com/get_token", params)

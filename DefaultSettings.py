@@ -34,6 +34,10 @@ class DefaultSettings:
 			"volume": 100,
 			"device": "",
 		}
+		config["user"]: {
+			"user": "",
+			"pass": "",
+		}
 		return config
 
 initialValues={}

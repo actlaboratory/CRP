@@ -245,13 +245,24 @@ class Events(BaseEvents):
 		if type(item) != calmradio.main.Channel:
 			return
 		streams = item.getStreams()
-		if "free_128" not in streams:
-			errorDialog(_("このチャンネルは、フリー版ではご利用いただけません。"))
-			return
-		globalVars.app.player.setPlaybackUrl(streams["free_128"])
+		self.parent.app.calmradio.auth()
+		if self.parent.app.calmradio.isActive():
+			# premium
+			# dummy
+			bitrate = "320"
+			url = streams[bitrate]
+			url = url.replace("https://", "https://%s:%s@" % (self.parent.app.calmradio.getUser().replace("@", "%40"), self.parent.app.calmradio.getToken()))
+			recentKey = "vip"
+		else:
+			if "free_128" not in streams:
+				errorDialog(_("このチャンネルは、フリー版ではご利用いただけません。"))
+				return
+			url = streams["free_128"]
+			recentKey = "free"
+		globalVars.app.player.setPlaybackUrl(url)
 		if self.nowPlayingChecker:
 			self.nowPlayingChecker.exit()
-		self.nowPlayingChecker = NowPlayingChecker(item.getRecentTracks()["free"], self.onNowPlayingChanged, self.onNowPlayingExit)
+		self.nowPlayingChecker = NowPlayingChecker(item.getRecentTracks()[recentKey], self.onNowPlayingChanged, self.onNowPlayingExit)
 		self.nowPlayingChecker.start()
 		globalVars.app.player.play()
 		if self.playbackStatusChecker:

@@ -1,11 +1,53 @@
 # main module of Calmradio
 
 from calmradio.api import Api
+from ConfigManager import ConfigManager
+import constants
 import errorCodes
+import globalVars
+import logging
+
 
 class Calmradio:
     def __init__(self):
+        self.log = logging.getLogger("%s.%s" % (constants.LOG_PREFIX, "calmradio.main"))
         self.api = Api()
+        self.config: ConfigManager = globalVars.app.config
+        self._user = ""
+        self._isActive = False
+        self._token = ""
+
+    def auth(self):
+        self.log.debug("Authorization started.")
+        user = self.config["user"]["user"]
+        pass_ = self.config["user"]["pass"]
+        if not user or not pass_:
+            # not configured
+            self.log.debug("Username or password is not configured.")
+            self._user = ""
+            self._isActive = False
+            self._token = ""
+            return
+        data = self.api.getToken(user, pass_)
+        if "error" in data:
+            self.log.debug("API returned error.")
+            self._user = ""
+            self._isActive = False
+            self._token = ""
+            return
+        self._user = user
+        self._isActive = data["membership"] == "active"
+        self._token = data["token"]
+        self.log.debug("user: %s, isActive: %s, token: %s" % (self._user, self._isActive, self._token))
+
+    def isActive(self):
+        return self._isActive
+
+    def getToken(self):
+        return self._token
+
+    def getUser(self):
+        return self._user
 
     def getCategories(self):
         ret = []
