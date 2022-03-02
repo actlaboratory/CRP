@@ -17,5 +17,6 @@ UPDATER_NOT_FOUND = 404		# アプリケーションが存在しない
 
 # calm radio
 CONNECTION_ERROR = 500
+LOGIN_FAILED = 501
 
 UNKNOWN = 99999

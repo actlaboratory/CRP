@@ -29,12 +29,14 @@ class Calmradio:
             self._token = ""
             return
         data = self.api.getToken(user, pass_)
+        if data == errorCodes.CONNECTION_ERROR:
+            return errorCodes.CONNECTION_ERROR
         if "error" in data:
             self.log.debug("API returned error.")
             self._user = ""
             self._isActive = False
             self._token = ""
-            return
+            return errorCodes.LOGIN_FAILED
         self._user = user
         self._isActive = data["membership"] == "active"
         self._token = data["token"]
