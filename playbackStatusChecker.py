@@ -52,9 +52,7 @@ class PlaybackStatusChecker(threading.Thread):
                 self._player.setDevice()
                 time.sleep(interval)
                 continue
-            if status == PLAYER_STATUS_PAUSED:
-                self._player.getPlayer().play()
-            if status not in (PLAYER_STATUS_PLAYING, PLAYER_STATUS_LOADING):
+            if status not in (PLAYER_STATUS_PLAYING, PLAYER_STATUS_LOADING, PLAYER_STATUS_PAUSED):
                 self.log.debug("stopping")
                 wx.CallAfter(self.onStop)
                 break
