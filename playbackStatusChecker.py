@@ -44,15 +44,13 @@ class PlaybackStatusChecker(threading.Thread):
                 global deviceErrorCount
                 deviceErrorCount += 1
                 self.log.debug("deviceErrorCount: %s" % deviceErrorCount)
-                if deviceErrorCount < deviceErrorMax:
-                    time.sleep(interval)
-                    continue
-                deviceErrorCount = 0
-                self.log.debug("Device error. Use default device.")
-                self._player.setDevice()
-                time.sleep(interval)
-                continue
-            if status not in (PLAYER_STATUS_PLAYING, PLAYER_STATUS_LOADING, PLAYER_STATUS_PAUSED):
+                if deviceErrorCount >= deviceErrorMax:
+                    deviceErrorCount = 0
+                    self.log.debug("Device error. Use default device.")
+                    self._player.setDevice()
+            elif status in (PLAYER_STATUS_PLAYING, PLAYER_STATUS_LOADING, PLAYER_STATUS_PAUSED):
+                pass
+            else:
                 self.log.debug("stopping")
                 wx.CallAfter(self.onStop)
                 break
