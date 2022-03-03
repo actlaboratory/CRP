@@ -14,6 +14,18 @@ interval = 1
 deviceErrorMax = 10
 deviceErrorCount = 0
 
+STATUS_CONSTANTS = {
+    PLAYERSTATUS_STATUS_OK: "OK",
+    PLAYERSTATUS_STATUS_FAILD: "FAILD",
+    PLAYER_STATUS_PLAYING: "PLAYING",
+    PLAYER_STATUS_PAUSED: "PAUSED",
+    PLAYER_STATUS_STOPPED: "STOPPED",
+    PLAYER_STATUS_END: "END",
+    PLAYER_STATUS_LOADING: "LOADING",
+    PLAYER_STATUS_DEVICEERROR: "DEVICEERROR",
+    PLAYER_STATUS_OVERREWIND: "OVERREWIND",
+}
+
 
 class PlaybackStatusChecker(threading.Thread):
     def __init__(self, player, onStop):
@@ -27,7 +39,7 @@ class PlaybackStatusChecker(threading.Thread):
         self.log.debug("started")
         while self.running:
             status = self._player.getPlayer().getStatus()
-            self.log.debug("status: %s" % status)
+            self.log.debug("status: %s" % STATUS_CONSTANTS[status])
             if status == PLAYER_STATUS_DEVICEERROR:
                 global deviceErrorCount
                 deviceErrorCount += 1
