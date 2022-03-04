@@ -4,7 +4,6 @@
 # Copyright (C) 2019-2021 yamahubuki <itiro.ishino@gmail.com>
 
 import pyperclip
-import time
 import urllib.parse
 import wx
 
@@ -290,7 +289,6 @@ class Events(BaseEvents):
 		if self.playbackStatusChecker:
 			self.playbackStatusChecker.exit()
 		self.playbackStatusChecker = PlaybackStatusChecker(self.parent.app.player, self.onStopButton)
-		time.sleep(1)
 		self.playbackStatusChecker.start()
 		self.parent.stopButton.Enable()
 		self.parent.menu.EnableMenu("PLAY_STOP", True)

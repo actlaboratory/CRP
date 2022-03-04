@@ -36,6 +36,7 @@ class PlaybackStatusChecker(threading.Thread):
         self.running = True
 
     def run(self):
+        time.sleep(1)
         self.log.debug("started")
         while self.running:
             status = self._player.getPlayer().getStatus()
