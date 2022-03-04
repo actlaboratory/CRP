@@ -22,4 +22,6 @@ dic = {
 
 	"HELP_UPDATE": _("最新バージョンを確認(&U)") + "...",
 	"HELP_VERSIONINFO": _("バージョン情報(&V)") + "...",
+
+	"NOWPLAYING_COPY": _("選択中の内容をコピー"),
 }

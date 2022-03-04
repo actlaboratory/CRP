@@ -16,3 +16,7 @@ defaultKeymap["mainView"] = {
 	"HELP_UPDATE": "",
 	"HELP_VERSIONINFO": "",
 }
+
+defaultKeymap["nowPlaying"] = {
+	"NOWPLAYING_COPY": "ctrl+c",
+}

@@ -3,6 +3,7 @@
 # Copyright (C) 2019 Yukio Nozawa <personal@nyanchangames.com>
 # Copyright (C) 2019-2021 yamahubuki <itiro.ishino@gmail.com>
 
+import pyperclip
 import time
 import urllib.parse
 import wx
@@ -65,6 +66,7 @@ class MainView(BaseView):
 		self.nowPlaying.Append([_("アーティスト"), ""])
 		self.nowPlaying.Append([_("アルバム"), ""])
 		self.nowPlaying.Append([_("チャンネル"), ""])
+		self.menu.keymap.Set("nowPlaying", self.nowPlaying)
 		# 初期値を再生に反映
 		self.events.onVolumeChanged()
 
@@ -182,6 +184,15 @@ class Events(BaseEvents):
 			d = versionDialog.dialog()
 			d.Initialize()
 			r = d.Show()
+
+		if selected == menuItemsStore.getRef("NOWPLAYING_COPY"):
+			idx = self.parent.nowPlaying.GetFocusedItem()
+			if idx < 0:
+				return
+			text = self.parent.nowPlaying.GetItemText(idx, 1)
+			if text:
+				pyperclip.copy(text)
+				self.log.debug("copied: %s" % text)
 
 	def setKeymap(self, identifier, ttl, keymap=None, filter=None):
 		if keymap:
