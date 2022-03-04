@@ -14,12 +14,14 @@ class Player:
 		self.config: ConfigManager = globalVars.app.config
 		self.log = logging.getLogger("%s.%s" % (constants.LOG_PREFIX, "player"))
 		self.setDevice(self.config["play"]["device"])
+		self._url = ""
 
 	def exit(self):
 		self._player.exit()
 
 	def setPlaybackUrl(self, url):
 		self.log.debug("playback URL: %s" % url)
+		self._url = url
 		return self._player.setSource(url)
 
 	def play(self):
@@ -61,3 +63,7 @@ class Player:
 
 	def getPlayer(self):
 		return self._player
+
+	def reload(self):
+		self.setPlaybackUrl(self._url)
+		self.play()

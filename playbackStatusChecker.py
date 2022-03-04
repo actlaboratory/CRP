@@ -48,6 +48,9 @@ class PlaybackStatusChecker(threading.Thread):
                     deviceErrorCount = 0
                     self.log.debug("Device error. Use default device.")
                     self._player.setDevice()
+            elif status == PLAYER_STATUS_END:
+                self.log.debug("restarting playback...")
+                self._player.reload()
             elif status in (PLAYER_STATUS_PLAYING, PLAYER_STATUS_LOADING, PLAYER_STATUS_PAUSED):
                 pass
             else:
