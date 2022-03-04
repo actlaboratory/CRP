@@ -64,6 +64,7 @@ class MainView(BaseView):
 		self.nowPlaying.Append([_("タイトル"), ""])
 		self.nowPlaying.Append([_("アーティスト"), ""])
 		self.nowPlaying.Append([_("アルバム"), ""])
+		self.nowPlaying.Disable()
 		self.nowPlaying.Append([_("チャンネル"), ""])
 		self.menu.keymap.Set("nowPlaying", self.nowPlaying)
 		# 初期値を再生に反映
@@ -318,6 +319,7 @@ class Events(BaseEvents):
 		globalVars.app.player.setDevice(name)
 
 	def onNowPlayingChanged(self, data):
+		self.parent.nowPlaying.Enable()
 		self.parent.nowPlaying.SetItem(0, 1, data["title"])
 		self.parent.nowPlaying.SetItem(1, 1, data["artist"])
 		self.parent.nowPlaying.SetItem(2, 1, data["album"])
