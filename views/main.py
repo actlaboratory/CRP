@@ -89,7 +89,7 @@ class MainView(BaseView):
 			for i in v:
 				channel = self.tree.AppendItem(category, i.getName())
 				self.treeItems[channel] = i
-		self.tree.Expand(root)
+		self.tree.ExpandAll()
 		d.Destroy()
 		self.tree.SelectItem(root)
 
