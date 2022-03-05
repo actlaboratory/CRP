@@ -16,6 +16,7 @@ dic = {
 
 	"PLAY_PLAY": _("選択中のチャンネルを再生(&P)"),
 	"PLAY_STOP": _("停止(&S)"),
+	"PLAY_COPY_URL": _("再生&URLのコピー"),
 
 	"OPTION_OPTION": _("オプション(&O)") + "...",
 	"OPTION_KEY_CONFIG": _("ショートカットキーの設定(&K)") + "...",

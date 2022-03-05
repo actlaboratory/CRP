@@ -116,6 +116,7 @@ class Menu(BaseMenu):
 		self.RegisterMenuCommand(self.hPlayMenu, [
 			"PLAY_PLAY",
 			"PLAY_STOP",
+			"PLAY_COPY_URL",
 		])
 
 		# オプションメニュー
@@ -136,6 +137,9 @@ class Menu(BaseMenu):
 		self.hMenuBar.Append(self.hOptionMenu, _("オプション(&O)"))
 		self.hMenuBar.Append(self.hHelpMenu, _("ヘルプ(&H)"))
 		target.SetMenuBar(self.hMenuBar)
+
+		# disable some items
+		self.EnableMenu("PLAY_COPY_URL", False)
 
 
 class Events(BaseEvents):
@@ -164,6 +168,9 @@ class Events(BaseEvents):
 
 		if selected == menuItemsStore.getRef("PLAY_STOP"):
 			self.onStopButton(event)
+
+		if selected == menuItemsStore.getRef("PLAY_COPY_URL"):
+			pyperclip.copy(globalVars.app.player.getPlaybackUrl())
 
 		if selected == menuItemsStore.getRef("OPTION_OPTION"):
 			d = settingsDialog.Dialog()
@@ -294,6 +301,7 @@ class Events(BaseEvents):
 		self.parent.stopButton.Enable()
 		self.parent.menu.EnableMenu("PLAY_STOP", True)
 		self.parent.nowPlaying.SetItem(3, 1, item.getName())
+		self.parent.menu.EnableMenu("PLAY_COPY_URL", True)
 
 	def onStopButton(self, event=None):
 		if event:

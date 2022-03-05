@@ -24,6 +24,9 @@ class Player:
 		self._url = url
 		return self._player.setSource(url)
 
+	def getPlaybackUrl(self):
+		return self._url
+
 	def play(self):
 		return self._player.play()
 
