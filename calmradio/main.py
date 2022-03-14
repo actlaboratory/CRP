@@ -1,5 +1,6 @@
 # main module of Calmradio
 
+from re import I
 from calmradio.api import Api
 from ConfigManager import ConfigManager
 import constants
@@ -53,22 +54,31 @@ class Calmradio:
 
     def getCategories(self):
         ret = []
-        categories = self.api.getCategories()
-        if categories == errorCodes.CONNECTION_ERROR:
+        metadata = self.api.getMetadata()
+        if metadata == errorCodes.CONNECTION_ERROR:
             return errorCodes.CONNECTION_ERROR
-        for section in categories:
-            ret += section["categories"]
-        return [Category(i) for i in ret]
+        try:
+            categories = metadata["metadata"]["categories"]
+        except Exception as e:
+            self.log.error(e)
+            return ret
+        for i in categories:
+            ret.append(Category(i))
+        return ret
 
     def getAllChannels(self):
         ret = {}
         channels = self.api.getChannels()
         if channels == errorCodes.CONNECTION_ERROR:
             return errorCodes.CONNECTION_ERROR
+        try:
+            channels = channels["channels"]
+        except Exception as e:
+            self.log.error(e)
+            return ret
+        channels = [Channel(i) for i in channels]
         for category in self.getCategories():
-            for group in channels:
-                if group["category"] == category.getId():
-                    ret[category] = [Channel(i) for i in group["channels"]]
+            ret[category] = [channel for channel in channels if channel.getId() in category.getChannels()]
         return ret
 
 class Category:
@@ -79,14 +89,17 @@ class Category:
         return self._data["id"]
 
     def getName(self):
-        return self._data["name"]
+        return self._data["title"]
+
+    def getChannels(self):
+        return self._data["channels"]
 
 class Channel:
     def __init__(self, data):
         self._data = data
 
     def getName(self):
-        return self._data["title"].replace("CALMRADIO - ", "")
+        return self._data["title"]
 
     def getStreams(self):
         return self._data["streams"]
@@ -96,3 +109,9 @@ class Channel:
 
     def getRecentTracks(self):
         return self._data["recent_tracks"]
+
+    def getCategory(self):
+        return self._data["category"]
+
+    def getId(self):
+        return self._data["id"]
