@@ -28,11 +28,17 @@ class Api:
             self.log.error("Failed to get json data from URL %s. Response: %s" % (url, response.text))
             return errorCodes.CONNECTION_ERROR
 
-    def getMetadata(self):
-        return self._getJson("https://api.calmradio.com/v2/metadata.json")
+    def getMetadata(self, locale):
+        if locale:
+            return self._getJson("https://api.calmradio.com/v2/metadata.json?locale=%s" % locale)
+        else:
+            return self._getJson("https://api.calmradio.com/v2/metadata.json")
 
-    def getChannels(self):
-        return self._getJson("https://api.calmradio.com/v2/channels.json")
+    def getChannels(self, locale):
+        if locale:
+            return self._getJson("https://api.calmradio.com/v2/channels.json?locale=%s" % locale)
+        else:
+            return self._getJson("https://api.calmradio.com/v2/channels.json")
 
     def getToken(self, user, pass_):
         params = {

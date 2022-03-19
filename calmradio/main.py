@@ -1,12 +1,14 @@
 # main module of Calmradio
 
-from re import I
 from calmradio.api import Api
 from ConfigManager import ConfigManager
 import constants
 import errorCodes
 import globalVars
 import logging
+
+
+locale = ""
 
 
 class Calmradio:
@@ -17,6 +19,14 @@ class Calmradio:
         self._user = ""
         self._isActive = False
         self._token = ""
+        # get locale information
+        self.log.debug("Getting locale...")
+        global locale
+        try:
+            locale = self.config["general"]["language"].split("-")[0].lower()
+            self.log.debug("locale: %s" % locale)
+        except Exception as e:
+            self.log.error("Failed to get locale. Reason: %s" % e)
 
     def auth(self):
         self.log.debug("Authorization started.")
@@ -54,7 +64,7 @@ class Calmradio:
 
     def getCategories(self):
         ret = []
-        metadata = self.api.getMetadata()
+        metadata = self.api.getMetadata(locale)
         if metadata == errorCodes.CONNECTION_ERROR:
             return errorCodes.CONNECTION_ERROR
         try:
@@ -68,7 +78,7 @@ class Calmradio:
 
     def getAllChannels(self):
         ret = {}
-        channels = self.api.getChannels()
+        channels = self.api.getChannels(locale)
         if channels == errorCodes.CONNECTION_ERROR:
             return errorCodes.CONNECTION_ERROR
         try:
