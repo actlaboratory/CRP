@@ -9,12 +9,12 @@ APP_FULL_NAME = "CalmRadio Player"#アプリケーションの完全な名前
 APP_NAME="CRP"#アプリケーションの名前
 APP_ICON = None
 APP_VERSION="0.0.1"
-APP_LAST_RELEASE_DATE="20xx-xx-xx"
-APP_COPYRIGHT_YEAR="20xx"
+APP_LAST_RELEASE_DATE="2022-04-09"
+APP_COPYRIGHT_YEAR="2022"
 APP_LICENSE="Apache License 2.0"
-APP_DEVELOPERS="anonymous"
-APP_DEVELOPERS_URL="https://example.com/"
-APP_DETAILS_URL="https://example.com/template"
+APP_DEVELOPERS="Kazto Kitabatake, ACT Laboratory"
+APP_DEVELOPERS_URL="https://actlab.org/"
+APP_DETAILS_URL="https://actlab.org/software/ULTRA"
 APP_COPYRIGHT_MESSAGE = "Copyright (c) %s %s All lights reserved." % (APP_COPYRIGHT_YEAR, APP_DEVELOPERS)
 
 SUPPORTING_LANGUAGE={"ja-JP": "日本語","en-US": "English"}
