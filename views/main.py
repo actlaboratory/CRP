@@ -80,15 +80,11 @@ class MainView(BaseView):
 			d.Destroy()
 			errorDialog(_("チャンネル一覧の取得に失敗しました。\nインターネット接続をご確認の上、しばらくたってから再度お試しください。\nこの問題が繰り返し発生する場合は、開発者までご連絡ください。"))
 			return
-		self.treeItems = {}
-		root = self.tree.AddRoot(_("チャンネル"))
-		self.treeItems[root] = None
+		root = self.tree.AddRoot(_("チャンネル"), data=None)
 		for k, v in self.channels.items():
-			category = self.tree.AppendItem(root, k.getName())
-			self.treeItems[category] = k
+			category = self.tree.AppendItem(root, k.getName(), data=k)
 			for i in v:
-				channel = self.tree.AppendItem(category, i.getName())
-				self.treeItems[channel] = i
+				channel = self.tree.AppendItem(category, i.getName(), data=i)
 		self.tree.Expand(root)
 		d.Destroy()
 		self.tree.SelectItem(root)
@@ -255,7 +251,7 @@ class Events(BaseEvents):
 		self.parent.app.player.setVolume(value)
 
 	def onChannelSelected(self, event):
-		item = self.parent.treeItems[self.parent.tree.GetFocusedItem()]
+		item = self.parent.tree.GetItemData(self.parent.tree.GetFocusedItem())
 		if type(item) != calmradio.main.Channel:
 			self.parent.description.Clear()
 			self.parent.description.Disable()
@@ -271,7 +267,7 @@ class Events(BaseEvents):
 		self.parent.menu.EnableMenu("PLAY_PLAY", True)
 
 	def onChannelActivated(self, event):
-		item = self.parent.treeItems[self.parent.tree.GetFocusedItem()]
+		item = self.parent.tree.GetItemData(self.parent.tree.GetFocusedItem())
 		if type(item) != calmradio.main.Channel:
 			return
 		streams = item.getStreams()
