@@ -54,3 +54,6 @@ AVAILABLE_BITRATE = [
     "192",
     "320",
 ]
+
+# menu item id
+DEVICE_MENU_START = 10000

@@ -36,8 +36,8 @@ class MainView(BaseView):
 			self.app.config.getint(self.identifier, "sizeY", 600, 300),
 			self.app.config.getint(self.identifier, "positionX", 50, 0),
 			self.app.config.getint(self.identifier, "positionY", 50, 0)
-		)
-		self.InstallMenuEvent(Menu(self.identifier), self.events.OnMenuSelect)
+		)	
+		self.InstallMenuEvent(Menu(self.identifier, self.events), self.events.OnMenuSelect)
 		self.InstallControls()
 
 	def InstallControls(self):
@@ -56,7 +56,6 @@ class MainView(BaseView):
 		self.stopButton.Disable()
 		self.menu.EnableMenu("PLAY_STOP", False)
 		self.volume, tmp = self.creator.slider(_("音量(&V)"), event=self.events.onVolumeChanged, style=wx.SL_VERTICAL, defaultValue=self.app.config.getint("play", "volume", 100, 0, 100))
-		self.deviceButton = self.creator.button(_("再生デバイスの変更(&D)"), self.events.onDeviceButtonPressed)
 		# now playing
 		self.nowPlaying, tmp = self.creator.listCtrl(_("現在再生中(&N)"))
 		self.nowPlaying.AppendColumn(_("項目"))
@@ -90,6 +89,10 @@ class MainView(BaseView):
 		self.tree.SelectItem(root)
 
 class Menu(BaseMenu):
+	def __init__(self, identifier, event):
+		super().__init__(identifier)
+		self.event = event
+	
 	def Apply(self, target):
 		"""指定されたウィンドウに、メニューを適用する。"""
 
@@ -114,6 +117,9 @@ class Menu(BaseMenu):
 			"PLAY_STOP",
 			"PLAY_COPY_URL",
 		])
+		self.hDeviceMenu = wx.Menu()
+		self.RegisterMenuCommand(self.hPlayMenu, "PLAY_CHANGE_DEVICE", subMenu=self.hDeviceMenu)
+		self.hPlayMenu.Bind(wx.EVT_MENU_OPEN, self.event.OnMenuOpen)
 
 		# オプションメニュー
 		self.RegisterMenuCommand(self.hOptionMenu, [
@@ -143,6 +149,7 @@ class Events(BaseEvents):
 		super().__init__(parent, identifier)
 		self.nowPlayingChecker = None
 		self.playbackStatusChecker = None
+		self.devices = {}
 
 	def OnMenuSelect(self, event):
 		"""メニュー項目が選択されたときのイベントハンドら。"""
@@ -202,6 +209,31 @@ class Events(BaseEvents):
 			if text:
 				pyperclip.copy(text)
 				self.log.debug("copied: %s" % text)
+
+		elif selected >= constants.DEVICE_MENU_START:
+			name = self.devices[selected]
+			if name == _("規定のデバイス"):
+				globalVars.app.player.setDevice("")
+			else:
+				globalVars.app.player.setDevice(name)
+
+	def OnMenuOpen(self, event):
+		menu = event.GetMenu()
+		if menu == self.parent.menu.hDeviceMenu:
+			# clear
+			for i in range(menu.GetMenuItemCount()):
+				menu.DestroyItem(menu.FindItemByPosition(0))
+			self.devices = {}
+			# get new data
+			devices = globalVars.app.player.getDeviceList()
+			for i in range(len(devices)):
+				menu.AppendCheckItem(i + constants.DEVICE_MENU_START, devices[i])
+				self.devices[i + constants.DEVICE_MENU_START] = devices[i]
+			current = self.parent.app.config["play"]["device"]
+			if current and (current in devices):
+				menu.Check(devices.index(current) + constants.DEVICE_MENU_START, True)
+			else:
+				menu.Check(devices.index(_("規定のデバイス")) + constants.DEVICE_MENU_START, True)
 
 	def setKeymap(self, identifier, ttl, keymap=None, filter=None):
 		if keymap:
@@ -312,22 +344,6 @@ class Events(BaseEvents):
 			globalVars.app.player.stop()
 		self.parent.stopButton.Disable()
 		self.parent.menu.EnableMenu("PLAY_STOP", False)
-
-	def onDeviceButtonPressed(self, event):
-		devices = globalVars.app.player.getDeviceList()
-		menu = wx.Menu()
-		for i in range(len(devices)):
-			menu.AppendCheckItem(i, devices[i])
-		current = self.parent.app.config["play"]["device"]
-		if current and (current in devices):
-			menu.Check(devices.index(current), True)
-		else:
-			menu.Check(devices.index(_("規定のデバイス")), True)
-		ret = self.parent.deviceButton.GetPopupMenuSelectionFromUser(menu)
-		name = devices[ret]
-		if name == _("規定のデバイス"):
-			name = ""
-		globalVars.app.player.setDevice(name)
 
 	def onNowPlayingChanged(self, data):
 		self.parent.nowPlaying.Enable()
