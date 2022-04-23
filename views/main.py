@@ -35,42 +35,50 @@ class MainView(BaseView):
 			self.app.config.getint(self.identifier, "sizeX", 800, 400),
 			self.app.config.getint(self.identifier, "sizeY", 600, 300),
 			self.app.config.getint(self.identifier, "positionX", 50, 0),
-			self.app.config.getint(self.identifier, "positionY", 50, 0)
+			self.app.config.getint(self.identifier, "positionY", 50, 0),
+			space=5,
+			margin=20
 		)
 		self.InstallMenuEvent(Menu(self.identifier, self.events), self.events.OnMenuSelect)
 		self.InstallControls()
 
 	def InstallControls(self):
+		horizontalCreator = views.ViewCreator.ViewCreator(self.viewMode,self.creator.GetPanel(),self.creator.GetSizer(), wx.HORIZONTAL, style=wx.ALL|wx.EXPAND, space=20)
+
 		# channels
-		self.tree, tmp = self.creator.treeCtrl(_("チャンネル一覧(&C)"))
+		self.tree, tmp = self.creator.treeCtrl(_("チャンネル一覧(&C)"), sizerFlag=wx.EXPAND, proportion=2)
 		self.tree.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.events.onChannelActivated)
 		self.tree.Bind(wx.EVT_TREE_SEL_CHANGED, self.events.onChannelSelected)
-		self.description, tmp = self.creator.inputbox(_("説明"), style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_PROCESS_ENTER)
+		self.description, tmp = self.creator.inputbox(_("説明"), style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_PROCESS_ENTER, proportion=1)
 		self.description.Disable()
 		self.description.Bind(wx.EVT_TEXT_ENTER, self.events.onChannelActivated)
+
 		# playback controls
-		self.playButton = self.creator.button(_("選択中のチャンネルを再生"), self.events.onChannelActivated)
+		self.playButton = horizontalCreator.button(_("選択中のチャンネルを再生"), self.events.onChannelActivated)
 		self.playButton.Disable()
 		self.menu.EnableMenu("PLAY_PLAY", False)
-		self.stopButton = self.creator.button(_("停止(&S)"), self.events.onStopButton)
+		self.stopButton = horizontalCreator.button(_("停止(&S)"), self.events.onStopButton)
 		self.stopButton.Disable()
 		self.menu.EnableMenu("PLAY_STOP", False)
-		self.mute = self.creator.button("", self.events.onMuteButton, style=wx.BU_NOTEXT | wx.BU_EXACTFIT | wx.BORDER_NONE, sizerFlag=wx.ALL | wx.ALIGN_CENTER, enableTabFocus=False)
+		horizontalCreator.GetSizer().AddStretchSpacer(1)
+		self.mute = horizontalCreator.button("", self.events.onMuteButton, style=wx.BU_NOTEXT | wx.BU_EXACTFIT | wx.BORDER_NONE, sizerFlag=wx.ALL | wx.ALIGN_CENTER, enableTabFocus=False)
 		if globalVars.app.config.getstring("view", "colorMode", "white", ("white", "dark")) == "white":
 			self.setBitmapButton(self.mute, self.hPanel, wx.Bitmap("./resources/volume.dat", wx.BITMAP_TYPE_GIF), _("ミュートをオンにする"))
 		else:
 			self.setBitmapButton(self.mute, self.hPanel, wx.Bitmap("./resources/volume_bk.dat", wx.BITMAP_TYPE_GIF), _("ミュートをオンにする"))
-		self.volume, tmp = self.creator.slider(_("音量(&V)"), event=self.events.onVolumeChanged, style=wx.SL_VERTICAL, defaultValue=self.app.config.getint("play", "volume", 100, 0, 100), textLayout=None)
+		self.volume, tmp = horizontalCreator.slider(_("音量(&V)"), event=self.events.onVolumeChanged, defaultValue=self.app.config.getint("play", "volume", 100, 0, 100), textLayout=None)
+
 		# now playing
-		self.nowPlaying, tmp = self.creator.listCtrl(_("現在再生中(&N)"))
-		self.nowPlaying.AppendColumn(_("項目"))
-		self.nowPlaying.AppendColumn(_("内容"))
+		self.nowPlaying, tmp = self.creator.listCtrl(_("現在再生中(&N)"), sizerFlag=wx.EXPAND)
+		self.nowPlaying.AppendColumn(_("項目"), width=200)
+		self.nowPlaying.AppendColumn(_("内容"), width=1600)
 		self.nowPlaying.Append([_("タイトル"), ""])
 		self.nowPlaying.Append([_("アーティスト"), ""])
 		self.nowPlaying.Append([_("アルバム"), ""])
 		self.nowPlaying.Disable()
 		self.nowPlaying.Append([_("チャンネル"), ""])
 		self.menu.keymap.Set("nowPlaying", self.nowPlaying)
+
 		# 初期値を再生に反映
 		self.events.onVolumeChanged()
 
