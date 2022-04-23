@@ -128,6 +128,7 @@ class Menu(BaseMenu):
 		self.RegisterMenuCommand(self.hPlayMenu, [
 			"PLAY_PLAY",
 			"PLAY_STOP",
+			"PLAY_MUTE",
 			"PLAY_COPY_URL",
 		])
 		self.hDeviceMenu = wx.Menu()
@@ -185,6 +186,9 @@ class Events(BaseEvents):
 
 		if selected == menuItemsStore.getRef("PLAY_STOP"):
 			self.onStopButton(event)
+
+		if selected == menuItemsStore.getRef("PLAY_MUTE"):
+			self.onMuteButton()
 
 		if selected == menuItemsStore.getRef("PLAY_COPY_URL"):
 			url = globalVars.app.player.getPlaybackUrl()
@@ -292,7 +296,7 @@ class Events(BaseEvents):
 		globalVars.app.player.exit()
 		event.Skip()
 
-	def onMuteButton(self, event):
+	def onMuteButton(self, event=None):
 		if not self.muteFlag:
 			globalVars.app.player.setVolume(0)
 			self.muteFlag = True
