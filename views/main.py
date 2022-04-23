@@ -36,7 +36,7 @@ class MainView(BaseView):
 			self.app.config.getint(self.identifier, "sizeY", 600, 300),
 			self.app.config.getint(self.identifier, "positionX", 50, 0),
 			self.app.config.getint(self.identifier, "positionY", 50, 0)
-		)	
+		)
 		self.InstallMenuEvent(Menu(self.identifier, self.events), self.events.OnMenuSelect)
 		self.InstallControls()
 
@@ -55,7 +55,12 @@ class MainView(BaseView):
 		self.stopButton = self.creator.button(_("停止(&S)"), self.events.onStopButton)
 		self.stopButton.Disable()
 		self.menu.EnableMenu("PLAY_STOP", False)
-		self.volume, tmp = self.creator.slider(_("音量(&V)"), event=self.events.onVolumeChanged, style=wx.SL_VERTICAL, defaultValue=self.app.config.getint("play", "volume", 100, 0, 100))
+		self.mute = self.creator.button("", self.events.onMuteButton, style=wx.BU_NOTEXT | wx.BU_EXACTFIT | wx.BORDER_NONE, sizerFlag=wx.ALL | wx.ALIGN_CENTER, enableTabFocus=False)
+		if globalVars.app.config.getstring("view", "colorMode", "white", ("white", "dark")) == "white":
+			self.setBitmapButton(self.mute, self.hPanel, wx.Bitmap("./resources/volume.dat", wx.BITMAP_TYPE_GIF), _("ミュートをオンにする"))
+		else:
+			self.setBitmapButton(self.mute, self.hPanel, wx.Bitmap("./resources/volume_bk.dat", wx.BITMAP_TYPE_GIF), _("ミュートをオンにする"))
+		self.volume, tmp = self.creator.slider(_("音量(&V)"), event=self.events.onVolumeChanged, style=wx.SL_VERTICAL, defaultValue=self.app.config.getint("play", "volume", 100, 0, 100), textLayout=None)
 		# now playing
 		self.nowPlaying, tmp = self.creator.listCtrl(_("現在再生中(&N)"))
 		self.nowPlaying.AppendColumn(_("項目"))
@@ -68,6 +73,13 @@ class MainView(BaseView):
 		self.menu.keymap.Set("nowPlaying", self.nowPlaying)
 		# 初期値を再生に反映
 		self.events.onVolumeChanged()
+
+	def setBitmapButton(self, button, backgroundWindow, bitmap, label):
+		if backgroundWindow != None:
+			button.SetBackgroundColour(backgroundWindow.GetBackgroundColour())
+		button.SetBitmap(bitmap)
+		button.SetLabel(label)
+		button.setToolTip()
 
 	def refreshChannels(self):
 		d = refresh.Dialog()
@@ -88,11 +100,12 @@ class MainView(BaseView):
 		d.Destroy()
 		self.tree.SelectItem(root)
 
+
 class Menu(BaseMenu):
 	def __init__(self, identifier, event):
 		super().__init__(identifier)
 		self.event = event
-	
+
 	def Apply(self, target):
 		"""指定されたウィンドウに、メニューを適用する。"""
 
@@ -150,6 +163,7 @@ class Events(BaseEvents):
 		self.nowPlayingChecker = None
 		self.playbackStatusChecker = None
 		self.devices = {}
+		self.muteFlag = False
 
 	def OnMenuSelect(self, event):
 		"""メニュー項目が選択されたときのイベントハンドら。"""
@@ -277,6 +291,25 @@ class Events(BaseEvents):
 	def OnExit(self, event):
 		globalVars.app.player.exit()
 		event.Skip()
+
+	def onMuteButton(self, event):
+		if not self.muteFlag:
+			globalVars.app.player.setVolume(0)
+			self.muteFlag = True
+			self.parent.volume.Disable()
+			if globalVars.app.config.getstring("view", "colorMode", "white", ("white", "dark")) == "white":
+				self.parent.setBitmapButton(self.parent.mute, None, wx.Bitmap("./resources/mute.dat", wx.BITMAP_TYPE_GIF), _("ミュートをオフにする"))
+			else:
+				self.parent.setBitmapButton(self.parent.mute, None, wx.Bitmap("./resources/mute_bk.dat", wx.BITMAP_TYPE_GIF), _("ミュートをオフにする"))
+		else:
+			val = self.parent.volume.GetValue()
+			globalVars.app.player.setVolume(val)
+			self.muteFlag = False
+			self.parent.volume.Enable()
+			if globalVars.app.config.getstring("view", "colorMode", "white", ("white", "dark")) == "white":
+				self.parent.setBitmapButton(self.parent.mute, None, wx.Bitmap("./resources/volume.dat", wx.BITMAP_TYPE_GIF), _("ミュートをオンにする"))
+			else:
+				self.parent.setBitmapButton(self.parent.mute, None, wx.Bitmap("./resources/volume_bk.dat", wx.BITMAP_TYPE_GIF), _("ミュートをオンにする"))
 
 	def onVolumeChanged(self, event=None):
 		value = self.parent.volume.GetValue()
