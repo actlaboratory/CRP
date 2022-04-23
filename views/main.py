@@ -305,6 +305,7 @@ class Events(BaseEvents):
 				self.parent.setBitmapButton(self.parent.mute, None, wx.Bitmap("./resources/mute.dat", wx.BITMAP_TYPE_GIF), _("ミュートをオフにする"))
 			else:
 				self.parent.setBitmapButton(self.parent.mute, None, wx.Bitmap("./resources/mute_bk.dat", wx.BITMAP_TYPE_GIF), _("ミュートをオフにする"))
+			self.parent.menu.SetMenuLabel("PLAY_MUTE", _("ミュート解除(&M)"))
 		else:
 			val = self.parent.volume.GetValue()
 			globalVars.app.player.setVolume(val)
@@ -314,6 +315,7 @@ class Events(BaseEvents):
 				self.parent.setBitmapButton(self.parent.mute, None, wx.Bitmap("./resources/volume.dat", wx.BITMAP_TYPE_GIF), _("ミュートをオンにする"))
 			else:
 				self.parent.setBitmapButton(self.parent.mute, None, wx.Bitmap("./resources/volume_bk.dat", wx.BITMAP_TYPE_GIF), _("ミュートをオンにする"))
+			self.parent.menu.SetMenuLabel("PLAY_MUTE", _("ミュート(&M)"))
 
 	def onVolumeChanged(self, event=None):
 		value = self.parent.volume.GetValue()
