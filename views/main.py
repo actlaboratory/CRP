@@ -298,7 +298,7 @@ class Events(BaseEvents):
 
 	def onMuteButton(self, event=None):
 		if not self.muteFlag:
-			globalVars.app.player.setVolume(0)
+			globalVars.app.player.setVolume(0, False)
 			self.muteFlag = True
 			self.parent.volume.Disable()
 			if globalVars.app.config.getstring("view", "colorMode", "white", ("white", "dark")) == "white":
@@ -308,7 +308,7 @@ class Events(BaseEvents):
 			self.parent.menu.SetMenuLabel("PLAY_MUTE", _("ミュート解除(&M)"))
 		else:
 			val = self.parent.volume.GetValue()
-			globalVars.app.player.setVolume(val)
+			globalVars.app.player.setVolume(val, False)
 			self.muteFlag = False
 			self.parent.volume.Enable()
 			if globalVars.app.config.getstring("view", "colorMode", "white", ("white", "dark")) == "white":
