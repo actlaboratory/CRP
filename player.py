@@ -33,9 +33,9 @@ class Player:
 	def stop(self):
 		return self._player.stop()
 
-	def setVolume(self, value):
+	def setVolume(self, value, save=True):
 		result = self._player.setVolume(value)
-		if result:
+		if result and save:
 			self.config["play"]["volume"] = value
 		return result
 
