@@ -161,9 +161,6 @@ class Menu(BaseMenu):
 		self.hMenuBar.Append(self.hHelpMenu, _("ヘルプ(&H)"))
 		target.SetMenuBar(self.hMenuBar)
 
-		# disable some items
-		self.EnableMenu("PLAY_COPY_URL", False)
-
 
 class Events(BaseEvents):
 	def __init__(self, parent, identifier):
@@ -382,7 +379,6 @@ class Events(BaseEvents):
 		self.parent.stopButton.Enable()
 		self.parent.menu.EnableMenu("PLAY_STOP", True)
 		self.parent.nowPlaying.SetItem(3, 1, item.getName())
-		self.parent.menu.EnableMenu("PLAY_COPY_URL", True)
 
 	def onStopButton(self, event=None):
 		if event:
