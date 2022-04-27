@@ -1,5 +1,6 @@
 # calmradio player
 
+import time
 from soundPlayer import player
 from soundPlayer.constants import *
 import globalVars
@@ -68,5 +69,17 @@ class Player:
 		return self._player
 
 	def reload(self):
-		self.setPlaybackUrl(self._url)
-		self.play()
+		self.log.debug("reloading...")
+		count = 0
+		while True:
+			self.setPlaybackUrl(self._url)
+			self.play()
+			time.sleep(5)
+			count += 1
+			self.log.debug("retried %d times" % count)
+			if self._player.getStatus() == PLAYER_STATUS_PLAYING:
+				self.log.debug("Playback has been successfully started")
+				break
+			if count > 5:
+				self.log.debug("Failed to start playback")
+				break
