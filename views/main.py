@@ -137,7 +137,6 @@ class Menu(BaseMenu):
 			"PLAY_PLAY",
 			"PLAY_STOP",
 			"PLAY_MUTE",
-			"PLAY_COPY_URL",
 		])
 		self.hDeviceMenu = wx.Menu()
 		self.RegisterMenuCommand(self.hPlayMenu, "PLAY_CHANGE_DEVICE", subMenu=self.hDeviceMenu)
