@@ -75,7 +75,7 @@ class Dialog(BaseDialog):
 
 		# calm radio
 		creator = views.ViewCreator.ViewCreator(self.viewMode, self.tab, None, views.ViewCreator.GridBagSizer, label=_("Calm Radio"), style=wx.ALL | wx.EXPAND, proportion=1, margin=20)
-		self.user, dummy = creator.inputbox("ユーザ名(&U)", sizerFlag=wx.EXPAND)
+		self.user, dummy = creator.inputbox(_("ユーザ名(&U)"), sizerFlag=wx.EXPAND)
 		self.user.hideScrollBar(wx.HORIZONTAL)
 		self.pass_, dummy = creator.inputbox(_("パスワード(&P)"), x=400, style=wx.TE_PASSWORD, sizerFlag=wx.EXPAND)
 		self.pass_.hideScrollBar(wx.HORIZONTAL)
