@@ -22,6 +22,7 @@ dic = {
 
 	"OPTION_OPTION": _("オプション(&O)") + "...",
 	"OPTION_KEY_CONFIG": _("ショートカットキーの設定(&K)") + "...",
+	"OPTION_HOTKEY": _("グローバルホットキーの設定(&H)") + "...",
 
 	"HELP_UPDATE": _("最新バージョンを確認(&U)") + "...",
 	"HELP_VERSIONINFO": _("バージョン情報(&V)") + "...",

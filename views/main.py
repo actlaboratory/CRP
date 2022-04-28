@@ -7,8 +7,10 @@ import pyperclip
 import urllib.parse
 import wx
 
+import ConfigManager
 import constants
 import globalVars
+import hotkeyHandler
 import menuItemsStore
 import update
 
@@ -40,10 +42,22 @@ class MainView(BaseView):
 			margin=20
 		)
 		self.InstallMenuEvent(Menu(self.identifier, self.events), self.events.OnMenuSelect)
+		self.applyHotKey()
 		self.InstallControls()
 
+	def applyHotKey(self):
+		self.hotkey = hotkeyHandler.HotkeyHandler(None, hotkeyHandler.HotkeyFilter().SetDefault())
+		if self.hotkey.addFile(constants.KEYMAP_FILE_NAME, ["HOTKEY"]) == errorCodes.OK:
+			errors = self.hotkey.GetError("HOTKEY")
+			if errors:
+				tmp = _(constants.KEYMAP_FILE_NAME + "で設定されたホットキーが正しくありません。キーの重複、存在しないキー名の指定、使用できないキーパターンの指定などが考えられます。以下のキーの設定内容をご確認ください。\n\n")
+				for v in errors:
+					tmp += v + "\n"
+				dialog(_("エラー"), tmp)
+			self.hotkey.Set("HOTKEY", self.hFrame)
+
 	def InstallControls(self):
-		horizontalCreator = views.ViewCreator.ViewCreator(self.viewMode,self.creator.GetPanel(),self.creator.GetSizer(), wx.HORIZONTAL, style=wx.ALL|wx.EXPAND, space=20)
+		horizontalCreator = views.ViewCreator.ViewCreator(self.viewMode, self.creator.GetPanel(), self.creator.GetSizer(), wx.HORIZONTAL, style=wx.ALL | wx.EXPAND, space=20)
 
 		# channels
 		self.tree, tmp = self.creator.treeCtrl(_("チャンネル一覧(&C)"), sizerFlag=wx.EXPAND, proportion=2)
@@ -146,6 +160,7 @@ class Menu(BaseMenu):
 		self.RegisterMenuCommand(self.hOptionMenu, [
 			"OPTION_OPTION",
 			"OPTION_KEY_CONFIG",
+			"OPTION_HOTKEY",
 		])
 
 		# ヘルプメニュー
@@ -214,6 +229,12 @@ class Events(BaseEvents):
 				self.parent.menu.InitShortcut()
 				self.parent.menu.ApplyShortcut(self.parent.hFrame)
 				self.parent.menu.Apply(self.parent.hFrame)
+
+		if selected == menuItemsStore.getRef("OPTION_HOTKEY"):
+			if self.setKeymap("HOTKEY", _("グローバルホットキーの設定"), self.parent.hotkey, filter=self.parent.hotkey.filter):
+				# 変更適用
+				self.parent.hotkey.UnSet("HOTKEY", self.parent.hFrame)
+				self.parent.applyHotKey()
 
 		if selected == menuItemsStore.getRef("HELP_UPDATE"):
 			update.checkUpdate()

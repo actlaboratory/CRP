@@ -21,3 +21,9 @@ defaultKeymap["mainView"] = {
 defaultKeymap["nowPlaying"] = {
 	"NOWPLAYING_COPY": "ctrl+c",
 }
+
+defaultKeymap["HOTKEY"] = {
+	"PLAY_PLAY": "",
+	"PLAY_STOP": "",
+	"PLAY_MUTE": "",
+}
