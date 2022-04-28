@@ -221,7 +221,7 @@ CRPを「V2」に対応させることは、技術的な理由で極めて困難
 ご利用いただく皆様にはご不便をおかけしますが、ご理解いただければ幸いです。
 ４．　CRPの使用中、以下のようなメッセージが表示されることがあります。
 ----------
-An error has occured. Contact to the developer for further assistance.
+An error has occurred. Contact to the developer for further assistance.
 ----------
 このメッセージは、ソフトウェアに何らかの問題が起きていることを表しています。[OK]ボタンを押すと、自動的にCRPは終了します。
 この現象が発生した場合、CRPをインストールしたフォルダ内に「errorlog.txt」というファイルが作成されています。
