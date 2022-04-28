@@ -210,11 +210,6 @@ class Events(BaseEvents):
 			self.onMuteButton()
 
 		if selected == menuItemsStore.getRef("PLAY_COPY_URL"):
-			url = globalVars.app.player.getPlaybackUrl()
-			if "@" in url:
-				q = yesNoDialog(_("再生URLのコピー"), _("この操作でコピーされるURLには、アカウントの認証情報が含まれています。この情報を他人に流出させないよう、十分ご注意ください。本当にコピーしますか？"))
-				if q == wx.ID_NO:
-					return
 			pyperclip.copy(url)
 			dialog(_("再生URLのコピー"), _("コピーしました。"))
 
