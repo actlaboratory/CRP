@@ -21,15 +21,6 @@ class configType(Enum):
 
 
 class Dialog(BaseDialog):
-	readerSelection = {
-		"NOSPEECH": _("音声なし"),
-		"AUTO": _("自動選択"),
-		"SAPI5": "SAPI5",
-		"CLIPBOARD": _("クリップボード出力"),
-		"PCTK": "PC-Talker",
-		"NVDA": "NVDA",
-		"JAWS": "JAWS for Windows"
-	}
 	logLevelSelection = {
 		"50": "CRITICAL",
 		"40": "ERROR",
@@ -75,7 +66,6 @@ class Dialog(BaseDialog):
 		# general
 		creator = views.ViewCreator.ViewCreator(self.viewMode, self.tab, None, views.ViewCreator.GridBagSizer, label=_("一般"), style=wx.ALL | wx.EXPAND, proportion=1, margin=20)
 		self.logLevel, dummy = creator.combobox(_("ログ記録レベル(&L)"), list(self.logLevelSelection.values()))
-		self.reader, static = creator.combobox(_("出力先(&O)"), list(self.readerSelection.values()))
 
 		# view
 		creator = views.ViewCreator.ViewCreator(self.viewMode, self.tab, None, views.ViewCreator.GridBagSizer, label=_("表示/言語"), style=wx.ALL, margin=20)
@@ -106,7 +96,6 @@ class Dialog(BaseDialog):
 
 	def load(self):
 		# general
-		self._setValue(self.reader, "speech", "reader", configType.DIC, self.readerSelection)
 		self._setValue(self.logLevel, "general", "log_level", configType.DIC, self.logLevelSelection)
 
 		# view
