@@ -1,6 +1,6 @@
-Copyright (c)2021 Kazto kashiwamochi,ACT laboratory All rights reserved.
+Copyright (c)2022 Kazto Kitabatake,ACT laboratory All rights reserved.
 
-本ソフトウェアは、Apache License 2.0の条件に従い、自由に利用することができます。
+本ソフトウェアは、GPL v2(or later)の条件に従い、自由に利用することができます。
 本ソフトウェアのソースコードは、readme.txtに記載のURLよりダウンロード可能です。
 
 ※本ソフトウェアには、以下の各ライセンスに従い他者の成果物を含みます。
@@ -10,19 +10,20 @@ Copyright (c)2021 Kazto kashiwamochi,ACT laboratory All rights reserved.
 	pypac	(https://pypi.org/project/pypac/)
 	libloader　(https://github.com/bmarwell/libloader/)
 
-・BSDライセンスに基づく以下のライブラリ
+・BSDライセンス
 	pyperclip	(https://pypi.org/project/pyperclip/)
-		Copyright (c) 2014, Al Sweigart
+	pybass　(https://pypi.org/project/pybass/)
+		Copyright(c) Maxim Kolosov 2009-2013 pyirrlicht@gmail.com
 
 ・MITライセンスに基づく以下のライブラリ
+	pytags　(https://pypi.org/project/pytags/)
 	AccessibleOutput2　(https://pypi.org/project/accessible-output2/)
 
-・MS-PLに基づく以下のライブラリ
+・MS-PL
 	DotNetZip
-
-
-
 
 その他、個別のライセンスに基づく複数のライブラリ
 
 各ライセンスは、licensesディレクトリ内に格納されています。
+
+※本ソフトウェアには、以下提供の素材が含まれます。
