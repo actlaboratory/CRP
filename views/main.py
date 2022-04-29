@@ -210,6 +210,9 @@ class Events(BaseEvents):
 			self.onMuteButton()
 
 		if selected == menuItemsStore.getRef("PLAY_COPY_URL"):
+			url = globalVars.app.player.getPlaybackUrl()
+			if len(url) == 0:
+				return
 			pyperclip.copy(url)
 			dialog(_("再生URLのコピー"), _("コピーしました。"))
 
