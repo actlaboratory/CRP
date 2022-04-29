@@ -1,12 +1,14 @@
 ﻿# -*- coding: utf-8 -*-
 # Application Main
 
+import os
 import AppBase
 import update
 import globalVars
 import proxyUtil
 from calmradio.main import Calmradio
 from player import Player
+import soundPlayer.player
 
 
 class Main(AppBase.MainBase):
@@ -35,6 +37,8 @@ class Main(AppBase.MainBase):
 			self.proxyEnviron.set_environ(self.config["proxy"]["server"], self.config.getint("proxy", "port", 8080, 0, 65535))
 		else:
 			self.proxyEnviron.set_environ()
+		if "http_proxy" in os.environ:
+			soundPlayer.player.setProxy(os.environ["http_proxy"])
 
 	def setGlobalVars(self):
 		globalVars.update = update.update()
