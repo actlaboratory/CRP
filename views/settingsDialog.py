@@ -155,3 +155,4 @@ class Dialog(BaseDialog):
 			else:
 				conf[v[1]][v[2]] = obj.GetValue()
 		self.app.InitSpeech()
+		self.app.setProxyEnviron()
