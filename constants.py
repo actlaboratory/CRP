@@ -5,11 +5,11 @@
 import wx
 
 #アプリケーション基本情報
-APP_FULL_NAME = "CalmRadio Player"#アプリケーションの完全な名前
+APP_FULL_NAME = "Calm Radio Player"#アプリケーションの完全な名前
 APP_NAME="CRP"#アプリケーションの名前
 APP_ICON = None
-APP_VERSION="0.0.1"
-APP_LAST_RELEASE_DATE="2022-04-09"
+APP_VERSION="1.0.0"
+APP_LAST_RELEASE_DATE="2022-04-29"
 APP_COPYRIGHT_YEAR="2022"
 APP_LICENSE="GPL v2(or later)"
 APP_DEVELOPERS="Kazto Kitabatake, ACT Laboratory"
