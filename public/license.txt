@@ -25,5 +25,3 @@ Copyright (c)2022 Kazto Kitabatake,ACT laboratory All rights reserved.
 その他、個別のライセンスに基づく複数のライブラリ
 
 各ライセンスは、licensesディレクトリ内に格納されています。
-
-※本ソフトウェアには、以下提供の素材が含まれます。
