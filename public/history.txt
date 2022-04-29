@@ -1,0 +1,4 @@
+Calm Radio Player(CRP) 更新履歴
+
+2022/04/29 Version 1.0.0
+初回リリース
