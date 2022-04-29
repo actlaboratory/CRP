@@ -5,7 +5,7 @@
 defaultKeymap = {}
 
 defaultKeymap["mainView"] = {
-	"FILE_REFRESH_CHANNELS": "f5",
+	"FILE_REFRESH_CHANNELS": "F5",
 
 	"PLAY_PLAY": "ctrl+p",
 	"PLAY_STOP": "ctrl+s",
