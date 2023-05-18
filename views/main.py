@@ -363,6 +363,7 @@ class Events(BaseEvents):
 	def onChannelActivated(self, event):
 		item = self.parent.tree.GetItemData(self.parent.tree.GetFocusedItem())
 		if type(item) != calmradio.main.Channel:
+			event.Skip()
 			return
 		streams = item.getStreams()
 		result = self.parent.app.calmradio.auth()
