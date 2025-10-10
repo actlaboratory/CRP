@@ -58,7 +58,7 @@ class Calmradio:
             return errorCodes.CONNECTION_ERROR
         for section in categories:
             ret += section["categories"]
-        return [Category(i) for i in ret]
+        return sorted([Category(i) for i in ret], key=lambda x: x.getName().lower())
 
     def getAllChannels(self):
         ret = {}
@@ -68,7 +68,8 @@ class Calmradio:
         for category in self.getCategories():
             for group in channels:
                 if group["category"] == category.getId():
-                    ret[category] = [Channel(i) for i in group["channels"]]
+                    # チャンネルをアルファベット順にソートして格納
+                    ret[category] = sorted([Channel(i) for i in group["channels"]], key=lambda x: x.getName().lower())
         return ret
 
 class Category:
