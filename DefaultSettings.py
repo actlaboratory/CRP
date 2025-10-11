@@ -14,7 +14,7 @@ class DefaultSettings:
 			"log_level": "0",
 		}
 		config["view"]={
-			"sort": False,
+			"sort": True,
 			"font": "bold 'ＭＳ ゴシック' 22 windows-932",
 			"colorMode":"normal",
 			"textwrapping":"off"
