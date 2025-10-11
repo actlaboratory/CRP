@@ -58,7 +58,10 @@ class Calmradio:
             return errorCodes.CONNECTION_ERROR
         for section in categories:
             ret += section["categories"]
-        return sorted([Category(i) for i in ret], key=lambda x: x.getName().lower())
+        ret = [Category(i) for i in ret]
+        if globalVars.app.config.getboolean("view", "sort", False):
+            ret = sorted(ret, key=lambda x: x.getName().lower())
+        return ret
 
     def getAllChannels(self):
         ret = {}
@@ -68,8 +71,10 @@ class Calmradio:
         for category in self.getCategories():
             for group in channels:
                 if group["category"] == category.getId():
-                    # チャンネルをアルファベット順にソートして格納
-                    ret[category] = sorted([Channel(i) for i in group["channels"]], key=lambda x: x.getName().lower())
+                    lst = [Channel(i) for i in group["channels"]]
+                    if globalVars.app.config.getboolean("view", "sort", False):
+                        lst = sorted(lst, key=lambda x: x.getName().lower())
+                    ret[category] = lst
         return ret
 
 class Category:
