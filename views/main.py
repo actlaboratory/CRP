@@ -4,7 +4,6 @@
 # Copyright (C) 2019-2021 yamahubuki <itiro.ishino@gmail.com>
 
 import pyperclip
-import urllib.parse
 import wx
 
 import ConfigManager
@@ -210,9 +209,25 @@ class Events(BaseEvents):
 			self.onMuteButton()
 
 		if selected == menuItemsStore.getRef("PLAY_COPY_URL"):
-			url = globalVars.app.player.getPlaybackUrl()
-			if len(url) == 0:
+			# 選択中のチャンネルを取得
+			item = self.parent.tree.GetItemData(self.parent.tree.GetFocusedItem())
+			if type(item) != calmradio.main.Channel:
+				dialog(_("再生URLのコピー"), _("チャンネルを選択してください。"))
 				return
+			
+			# URLを生成（モデル層のメソッドを使用）
+			url, recentKey, error = item.generatePlaybackUrl(self.parent.app.calmradio, self.parent.app.config)
+			if error == errorCodes.CONNECTION_ERROR:
+				errorDialog(_("ログインに失敗しました。\nインターネット接続をご確認の上、しばらくたってから再度お試しください。\nこの問題が繰り返し発生する場合は、開発者までご連絡ください。"))
+				return
+			if error == errorCodes.LOGIN_FAILED:
+				errorDialog(_("ログインに失敗しました。ユーザ名／パスワードの設定内容をご確認ください。"))
+				return
+			if error == errorCodes.NOT_SUPPORTED:
+				errorDialog(_("このチャンネルは、フリー版ではご利用いただけません。"))
+				return
+			
+			# クリップボードにコピー
 			pyperclip.copy(url)
 			dialog(_("再生URLのコピー"), _("コピーしました。"))
 
@@ -365,27 +380,19 @@ class Events(BaseEvents):
 		if type(item) != calmradio.main.Channel:
 			event.Skip()
 			return
-		streams = item.getStreams()
-		result = self.parent.app.calmradio.auth()
-		if result == errorCodes.CONNECTION_ERROR:
+		
+		# URLを生成（モデル層のメソッドを使用）
+		url, recentKey, error = item.generatePlaybackUrl(self.parent.app.calmradio, self.parent.app.config)
+		if error == errorCodes.CONNECTION_ERROR:
 			errorDialog(_("ログインに失敗しました。\nインターネット接続をご確認の上、しばらくたってから再度お試しください。\nこの問題が繰り返し発生する場合は、開発者までご連絡ください。"))
 			return
-		if result == errorCodes.LOGIN_FAILED:
+		if error == errorCodes.LOGIN_FAILED:
 			errorDialog(_("ログインに失敗しました。ユーザ名／パスワードの設定内容をご確認ください。"))
 			return
-		if self.parent.app.calmradio.isActive():
-			# premium
-			bitrate = self.parent.app.config.getstring("play", "bitrate", "320", constants.AVAILABLE_BITRATE)
-			url = streams[bitrate]
-			recentKey = "vip"
-		else:
-			if "free_128" not in streams:
-				errorDialog(_("このチャンネルは、フリー版ではご利用いただけません。"))
-				return
-			url = streams["free_128"]
-			recentKey = "free"
-		if self.parent.app.calmradio.getUser():
-			url = url.replace("https://", "https://%s:%s@" % (urllib.parse.quote(self.parent.app.calmradio.getUser()), urllib.parse.quote(self.parent.app.calmradio.getToken())))
+		if error == errorCodes.NOT_SUPPORTED:
+			errorDialog(_("このチャンネルは、フリー版ではご利用いただけません。"))
+			return
+		
 		globalVars.app.player.setPlaybackUrl(url)
 		if self.nowPlayingChecker:
 			self.nowPlayingChecker.exit()

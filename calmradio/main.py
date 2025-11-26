@@ -102,3 +102,41 @@ class Channel:
 
     def getRecentTracks(self):
         return self._data["recent_tracks"]
+
+    def generatePlaybackUrl(self, calmradio, config):
+        """再生URLを生成する
+        
+        Args:
+            calmradio: Calmradioオブジェクト（認証情報を取得するため）
+            config: ConfigManagerオブジェクト（設定を取得するため）
+        
+        Returns:
+            tuple: (url, recentKey, errorCode)
+            - url: 生成されたURL（エラー時はNone）
+            - recentKey: "vip"または"free"（エラー時はNone）
+            - errorCode: エラーコード（成功時はNone）
+        """
+        import urllib.parse
+        
+        streams = self.getStreams()
+        result = calmradio.auth()
+        if result == errorCodes.CONNECTION_ERROR:
+            return None, None, errorCodes.CONNECTION_ERROR
+        if result == errorCodes.LOGIN_FAILED:
+            return None, None, errorCodes.LOGIN_FAILED
+        
+        if calmradio.isActive():
+            # premium
+            bitrate = config.getstring("play", "bitrate", "320", constants.AVAILABLE_BITRATE)
+            url = streams[bitrate]
+            recentKey = "vip"
+        else:
+            if "free_128" not in streams:
+                return None, None, errorCodes.NOT_SUPPORTED
+            url = streams["free_128"]
+            recentKey = "free"
+        
+        if calmradio.getUser():
+            url = url.replace("https://", "https://%s:%s@" % (urllib.parse.quote(calmradio.getUser()), urllib.parse.quote(calmradio.getToken())))
+        
+        return url, recentKey, None
