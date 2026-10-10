@@ -81,6 +81,7 @@ class Dialog(BaseDialog):
 		self.pass_.hideScrollBar(wx.HORIZONTAL)
 		self.bitrate, dummy = creator.combobox(_("再生音質(&Q)"), list(self.bitrateSelection.values()))
 		self.sort = creator.checkbox(_("チャンネル一覧をアルファベット順で表示(&S)"))
+		self.channelInfoInEnglish = creator.checkbox(_("チャンネル情報を英語で表示(&E)"))
 
 		# network
 		creator = views.ViewCreator.ViewCreator(self.viewMode, self.tab, None, wx.VERTICAL, space=20, label=_("ネットワーク"), style=wx.ALL, margin=20)
@@ -109,6 +110,7 @@ class Dialog(BaseDialog):
 		self._setValue(self.pass_, "user", "pass", configType.STRING)
 		self._setValue(self.bitrate, "play", "bitrate", configType.DIC, self.bitrateSelection)
 		self._setValue(self.sort, "view", "sort", configType.BOOL)
+		self._setValue(self.channelInfoInEnglish, "view", "channel_info_in_english", configType.BOOL, False)
 
 		# network
 		self._setValue(self.update, "general", "update", configType.BOOL)

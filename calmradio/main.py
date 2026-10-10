@@ -52,6 +52,9 @@ class Calmradio:
         return self._user
 
     def _getLocale(self):
+        # 機械翻訳が不正確なことがあるため、アプリの言語に関係なく英語で表示できるようにしている
+        if self.config.getboolean("view", "channel_info_in_english", False):
+            return "en"
         # "ja-JP" -> "ja"
         return self.config.getstring("general", "language", "ja-JP").split("-")[0]
 
