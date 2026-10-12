@@ -282,7 +282,7 @@ class Events(BaseEvents):
 
 		elif selected >= constants.DEVICE_MENU_START:
 			name = self.devices[selected]
-			if name == _("規定のデバイス"):
+			if name == _("既定のデバイス"):
 				globalVars.app.player.setDevice("")
 			else:
 				globalVars.app.player.setDevice(name)
@@ -303,7 +303,7 @@ class Events(BaseEvents):
 			if current and (current in devices):
 				menu.Check(devices.index(current) + constants.DEVICE_MENU_START, True)
 			else:
-				menu.Check(devices.index(_("規定のデバイス")) + constants.DEVICE_MENU_START, True)
+				menu.Check(devices.index(_("既定のデバイス")) + constants.DEVICE_MENU_START, True)
 
 	def setKeymap(self, identifier, ttl, keymap=None, filter=None):
 		if keymap:

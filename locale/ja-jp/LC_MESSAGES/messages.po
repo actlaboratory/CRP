@@ -120,7 +120,7 @@ msgid "選択中の内容をコピー"
 msgstr ""
 
 #: player.py:49 views\main.py:253 views\main.py:274
-msgid "規定のデバイス"
+msgid "既定のデバイス"
 msgstr ""
 
 #: update.py:50 update.py:59 update.py:73 update.py:79 update.py:90

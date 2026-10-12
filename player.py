@@ -48,7 +48,7 @@ class Player:
 	def getDeviceList(self):
 		result = self._player.getDeviceList()
 		del result[result.index("No sound")]
-		result.insert(0, _("規定のデバイス"))
+		result.insert(0, _("既定のデバイス"))
 		self.log.debug("available devices: %s" % result)
 		return result
 
