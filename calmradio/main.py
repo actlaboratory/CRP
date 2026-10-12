@@ -40,7 +40,7 @@ class Calmradio:
         self._user = user
         self._isActive = data["membership"] == "active"
         self._token = data["token"]
-        self.log.debug("user: %s, isActive: %s, token: %s" % (self._user, self._isActive, self._token))
+        self.log.debug("Authorization succeeded. isActive: %s" % self._isActive)
 
     def isActive(self):
         return self._isActive
