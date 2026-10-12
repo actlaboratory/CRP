@@ -1,5 +1,6 @@
 # calmradio player
 
+import re
 import time
 from soundPlayer import player
 from soundPlayer.constants import *
@@ -21,7 +22,8 @@ class Player:
 		self._player.exit()
 
 	def setPlaybackUrl(self, url):
-		self.log.debug("playback URL: %s" % url)
+		# URLに埋め込まれたユーザー名とトークンはログに残さない
+		self.log.debug("playback URL: %s" % re.sub(r"//[^/@]*@", "//***:***@", url))
 		self._url = url
 		return self._player.setSource(url)
 
