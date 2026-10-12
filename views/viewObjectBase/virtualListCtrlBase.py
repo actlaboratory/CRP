@@ -361,7 +361,8 @@ class virtualListCtrl(listCtrlBase.listCtrl):
         self.printColumn = v
 
     def loadColumnInfo(self,section,key):
-        self.printColumn = self._needSaveColumnInfo and globalVars.app.config.getboolean(self.sectionName,self.keyName+"_print_column_name",True)
+        # この時点ではsectionName/keyNameは未設定(super().loadColumnInfoで設定される)なので、引数で読む
+        self.printColumn = globalVars.app.config.getboolean(section,key+"_print_column_name",True)
         super().loadColumnInfo(section,key)
 
     def saveColumnInfo(self):
