@@ -106,12 +106,14 @@ class MainView(BaseView):
 		d = refresh.Dialog()
 		d.Initialize()
 		d.Show(False)
-		self.tree.DeleteAllItems()
-		self.channels = self.app.calmradio.getAllChannels()
-		if self.channels == errorCodes.CONNECTION_ERROR:
+		result = self.app.calmradio.getAllChannels()
+		if result == errorCodes.CONNECTION_ERROR:
+			# 取得に失敗した場合は、それまでの一覧を残しておく
 			d.Destroy()
 			errorDialog(_("チャンネル一覧の取得に失敗しました。\nインターネット接続をご確認の上、しばらくたってから再度お試しください。\nこの問題が繰り返し発生する場合は、開発者までご連絡ください。"))
 			return
+		self.channels = result
+		self.tree.DeleteAllItems()
 		root = self.tree.AddRoot(_("チャンネル"), data=None)
 		for genre, categories in self.channels.items():
 			genreItem = self.tree.AppendItem(root, genre.getName(), data=genre)
@@ -122,6 +124,16 @@ class MainView(BaseView):
 		self.tree.Expand(root)
 		d.Destroy()
 		self.tree.SelectItem(root)
+
+	def getSelectedChannel(self):
+		"""ツリーで選択中のチャンネルを返す。チャンネル以外を選択中、またはツリーが空の場合はNone"""
+		item = self.tree.GetFocusedItem()
+		if not item.IsOk():
+			return None
+		data = self.tree.GetItemData(item)
+		if not isinstance(data, calmradio.main.Channel):
+			return None
+		return data
 
 
 class Menu(BaseMenu):
@@ -212,8 +224,8 @@ class Events(BaseEvents):
 
 		if selected == menuItemsStore.getRef("PLAY_COPY_URL"):
 			# 選択中のチャンネルを取得
-			item = self.parent.tree.GetItemData(self.parent.tree.GetFocusedItem())
-			if type(item) != calmradio.main.Channel:
+			item = self.parent.getSelectedChannel()
+			if item is None:
 				dialog(_("再生URLのコピー"), _("チャンネルを選択してください。"))
 				return
 			
@@ -362,8 +374,8 @@ class Events(BaseEvents):
 		self.parent.app.player.setVolume(value)
 
 	def onChannelSelected(self, event):
-		item = self.parent.tree.GetItemData(self.parent.tree.GetFocusedItem())
-		if type(item) != calmradio.main.Channel:
+		item = self.parent.getSelectedChannel()
+		if item is None:
 			self.parent.description.Clear()
 			self.parent.description.Disable()
 			self.parent.playButton.Disable()
@@ -378,8 +390,8 @@ class Events(BaseEvents):
 		self.parent.menu.EnableMenu("PLAY_PLAY", True)
 
 	def onChannelActivated(self, event):
-		item = self.parent.tree.GetItemData(self.parent.tree.GetFocusedItem())
-		if type(item) != calmradio.main.Channel:
+		item = self.parent.getSelectedChannel()
+		if item is None:
 			event.Skip()
 			return
 		
