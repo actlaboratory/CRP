@@ -2,6 +2,7 @@
 
 import constants
 import errorCodes
+import globalVars
 import json
 import logging
 import requests
@@ -20,8 +21,9 @@ class Api:
                 クエリー文字列、レスポンスの値、例外の詳細を記録しない
         """
         self.log.debug("Connecting to %s" % url)
+        timeout = globalVars.app.config.getint("general", "timeout", 3)
         try:
-            response = requests.get(url, *args, **kwargs)
+            response = requests.get(url, *args, timeout=timeout, **kwargs)
             self.log.debug("code: %s, url: %s" % (response.status_code, url if sensitive else response.url))
         except Exception as e:
             if sensitive:
