@@ -113,10 +113,12 @@ class MainView(BaseView):
 			errorDialog(_("チャンネル一覧の取得に失敗しました。\nインターネット接続をご確認の上、しばらくたってから再度お試しください。\nこの問題が繰り返し発生する場合は、開発者までご連絡ください。"))
 			return
 		root = self.tree.AddRoot(_("チャンネル"), data=None)
-		for k, v in self.channels.items():
-			category = self.tree.AppendItem(root, k.getName(), data=k)
-			for i in v:
-				channel = self.tree.AppendItem(category, i.getName(), data=i)
+		for genre, categories in self.channels.items():
+			genreItem = self.tree.AppendItem(root, genre.getName(), data=genre)
+			for category, channels in categories.items():
+				categoryItem = self.tree.AppendItem(genreItem, category.getName(), data=category)
+				for channel in channels:
+					self.tree.AppendItem(categoryItem, channel.getName(), data=channel)
 		self.tree.Expand(root)
 		d.Destroy()
 		self.tree.SelectItem(root)
