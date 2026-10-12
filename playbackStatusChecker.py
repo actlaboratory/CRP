@@ -12,7 +12,6 @@ import wx
 
 interval = 1
 deviceErrorMax = 10
-deviceErrorCount = 0
 
 STATUS_CONSTANTS = {
     PLAYERSTATUS_STATUS_OK: "OK",
@@ -34,6 +33,8 @@ class PlaybackStatusChecker(threading.Thread):
         self.onStop = onStop
         self.log = logging.getLogger("%s.%s" % (constants.LOG_PREFIX, "playbackStatusChecker"))
         self.running = True
+        # DEVICEERRORが連続した回数。再生ごとに数え直す
+        self.deviceErrorCount = 0
 
     def run(self):
         time.sleep(1)
@@ -41,12 +42,14 @@ class PlaybackStatusChecker(threading.Thread):
         while self.running:
             status = self._player.getPlayer().getStatus()
             self.log.debug("status: %s" % STATUS_CONSTANTS[status])
+            if status != PLAYER_STATUS_DEVICEERROR:
+                # 一時的なエラーから回復した場合は数え直す
+                self.deviceErrorCount = 0
             if status == PLAYER_STATUS_DEVICEERROR:
-                global deviceErrorCount
-                deviceErrorCount += 1
-                self.log.debug("deviceErrorCount: %s" % deviceErrorCount)
-                if deviceErrorCount >= deviceErrorMax:
-                    deviceErrorCount = 0
+                self.deviceErrorCount += 1
+                self.log.debug("deviceErrorCount: %s" % self.deviceErrorCount)
+                if self.deviceErrorCount >= deviceErrorMax:
+                    self.deviceErrorCount = 0
                     self.log.debug("Device error. Use default device.")
                     self._player.setDevice()
             elif status == PLAYER_STATUS_END:
