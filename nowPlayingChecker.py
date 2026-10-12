@@ -39,11 +39,19 @@ class NowPlayingChecker(threading.Thread):
                     data = data["now_playing"]
                     if data != self.oldData:
                         self.log.debug("New data")
-                        wx.CallAfter(self.onChange, data)
+                        wx.CallAfter(self._notifyChange, data)
                         self.oldData = data
             except Exception as e:
                 self.log.error(traceback.format_exc())
             time.sleep(interval)
+
+    def _notifyChange(self, data):
+        # メインスレッドで呼ばれる。exit()も同じスレッドで呼ばれるため、ここで確認すれば
+        # exit()の後に届いた古いチャンネルの曲情報で画面を上書きすることはない
+        if not self.running:
+            self.log.debug("Discarded data received after exit")
+            return
+        self.onChange(data)
 
     def exit(self):
         self.log.debug("exitting...")
