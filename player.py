@@ -9,6 +9,9 @@ from ConfigManager import ConfigManager
 import logging
 import constants
 
+# BASSが返す、既定の出力先に追従する仮想デバイスの名前
+BASS_DEFAULT_DEVICE_NAME = "Default"
+
 
 class Player:
 	def __init__(self):
@@ -48,11 +51,18 @@ class Player:
 	def getDeviceList(self):
 		result = self._player.getDeviceList()
 		del result[result.index("No sound")]
+		# BASS 2.4.16以降の「Default」は既定の出力先に追従する仮想デバイス。
+		# 「既定のデバイス」と同じものなので、一覧には出さない
+		if BASS_DEFAULT_DEVICE_NAME in result:
+			del result[result.index(BASS_DEFAULT_DEVICE_NAME)]
 		result.insert(0, _("既定のデバイス"))
 		self.log.debug("available devices: %s" % result)
 		return result
 
 	def setDevice(self, name=""):
+		if name == BASS_DEFAULT_DEVICE_NAME:
+			# 以前のバージョンで「Default」を選んで保存した設定は、既定のデバイスとして扱う
+			name = ""
 		if name:
 			self.log.debug("changing device to %s" % name)
 			result = self._player.setDeviceByName(name)
