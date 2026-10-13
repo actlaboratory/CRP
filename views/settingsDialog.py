@@ -38,10 +38,13 @@ class Dialog(BaseDialog):
 		"off": _("折り返さない")
 	}
 	languageSelection = constants.SUPPORTING_LANGUAGE
+	# 音質の選択肢は、Calm Radio公式サイトのプレーヤーの英語版の表記をそのまま使う。
+	# 公式サイトは英語が原文で、日本語版は機械翻訳のため、翻訳せずにどの表示言語でも英語で表示する。
+	# 公式サイトの表記が変わらない限り、変更したり_()で囲んだりしないこと
 	bitrateSelection = {
-		"320": _("高解像度"),
-		"192": _("標準"),
-		"64": _("携帯"),
+		"320": "HD",
+		"192": "High",
+		"64": "Mobile",
 	}
 
 	def __init__(self):

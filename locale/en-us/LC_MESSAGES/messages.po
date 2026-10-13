@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CRP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-13 23:18+0900\n"
+"POT-Creation-Date: 2026-10-14 00:07+0900\n"
 "PO-Revision-Date: 2026-10-13 23:30+0900\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -268,7 +268,7 @@ msgstr "Shortcut 4"
 msgid "ショートカット5"
 msgstr "Shortcut 5"
 
-#: views\globalKeyConfig.py:75 views\settingsDialog.py:53
+#: views\globalKeyConfig.py:75 views\settingsDialog.py:56
 msgid "設定"
 msgstr "Settings"
 
@@ -331,7 +331,7 @@ msgid "ＯＫ"
 msgstr "OK"
 
 #: views\KeyValueSettingDialogBase.py:85 views\KeyValueSettingDialogBase.py:279
-#: views\settingsDialog.py:97 views\SimpleInputDialog.py:56
+#: views\settingsDialog.py:100 views\SimpleInputDialog.py:56
 #: views\updateDialog.py:45
 msgid "キャンセル"
 msgstr "Cancel"
@@ -527,7 +527,7 @@ msgstr "Refresh Channel List"
 msgid "チャンネル一覧を取得しています..."
 msgstr "Getting the channel list..."
 
-#: views\settingsDialog.py:33 views\settingsDialog.py:43
+#: views\settingsDialog.py:33
 msgid "標準"
 msgstr "Standard"
 
@@ -543,83 +543,75 @@ msgstr "Wrap at window width"
 msgid "折り返さない"
 msgstr "Don't wrap"
 
-#: views\settingsDialog.py:42
-msgid "高解像度"
-msgstr "High quality"
-
-#: views\settingsDialog.py:44
-msgid "携帯"
-msgstr "Mobile"
-
-#: views\settingsDialog.py:64
+#: views\settingsDialog.py:67
 msgid "カテゴリ選択"
 msgstr "Category"
 
-#: views\settingsDialog.py:67
+#: views\settingsDialog.py:70
 msgid "一般"
 msgstr "General"
 
-#: views\settingsDialog.py:68
+#: views\settingsDialog.py:71
 msgid "ログ記録レベル(&L)"
 msgstr "&Logging level"
 
-#: views\settingsDialog.py:71
+#: views\settingsDialog.py:74
 msgid "表示/言語"
 msgstr "Display/Language"
 
-#: views\settingsDialog.py:72
+#: views\settingsDialog.py:75
 msgid "言語(&L)"
 msgstr "&Language"
 
-#: views\settingsDialog.py:73
+#: views\settingsDialog.py:76
 msgid "画面表示モード(&D)"
 msgstr "&Display mode"
 
-#: views\settingsDialog.py:74
+#: views\settingsDialog.py:77
 msgid "テキストの折り返し(&W)"
 msgstr "Text &wrapping"
 
-#: views\settingsDialog.py:77
+#: views\settingsDialog.py:80
 msgid "Calm Radio"
 msgstr "Calm Radio"
 
-#: views\settingsDialog.py:78
+#: views\settingsDialog.py:81
 msgid "ユーザ名(&U)"
 msgstr "&User name"
 
-#: views\settingsDialog.py:80
+#: views\settingsDialog.py:83
 msgid "パスワード(&P)"
 msgstr "&Password"
 
-#: views\settingsDialog.py:82
+#: views\settingsDialog.py:85
 msgid "再生音質(&Q)"
 msgstr "Playback &quality"
 
-#: views\settingsDialog.py:83
+#: views\settingsDialog.py:86
 msgid "チャンネル一覧をアルファベット順で表示(&S)"
 msgstr "&Sort the channel list alphabetically"
 
-#: views\settingsDialog.py:84
+#: views\settingsDialog.py:87
 msgid "チャンネル情報を英語で表示(&E)"
 msgstr "Show channel information in &English"
 
-#: views\settingsDialog.py:87
+#: views\settingsDialog.py:90
 msgid "ネットワーク"
 msgstr "Network"
 
-#: views\settingsDialog.py:88
+#: views\settingsDialog.py:91
 msgid "起動時に更新を確認(&U)"
 msgstr "Check for &updates at startup"
 
-#: views\settingsDialog.py:89
+#: views\settingsDialog.py:92
 msgid "プロキシサーバーの情報を手動で設定する(&M)"
 msgstr "&Manually configure the proxy server"
 
-#: views\settingsDialog.py:90
+#: views\settingsDialog.py:93
 msgid "サーバーURL"
 msgstr "Server URL"
 
-#: views\settingsDialog.py:92
+#: views\settingsDialog.py:95
 msgid "ポート番号"
 msgstr "Port number"
 
