@@ -164,6 +164,7 @@ class Menu(BaseMenu):
 			"PLAY_PLAY",
 			"PLAY_STOP",
 			"PLAY_MUTE",
+			"PLAY_COPY_URL",
 		])
 		self.hDeviceMenu = wx.Menu()
 		self.RegisterMenuCommand(self.hPlayMenu, "PLAY_CHANGE_DEVICE", subMenu=self.hDeviceMenu)
@@ -241,6 +242,11 @@ class Events(BaseEvents):
 				errorDialog(_("このチャンネルは、フリー版ではご利用いただけません。"))
 				return
 			
+			# ログインしているとURLにユーザー名とトークンが入るため、コピーする前に確認する
+			if self.parent.app.calmradio.getUser():
+				if yesNoDialog(_("再生URLのコピー"), _("このURLには、Calm Radioのアカウントにログインするための情報が含まれています。\nこのURLを他の人に教えたり、インターネット上に公開したりしないでください。\nコピーしますか？")) != wx.ID_YES:
+					return
+
 			# クリップボードにコピー
 			pyperclip.copy(url)
 			dialog(_("再生URLのコピー"), _("コピーしました。"))
