@@ -83,8 +83,11 @@ class Dialog(BaseDialog):
 		self.pass_, dummy = creator.inputbox(_("パスワード(&P)"), x=400, style=wx.TE_PASSWORD, sizerFlag=wx.EXPAND)
 		self.pass_.hideScrollBar(wx.HORIZONTAL)
 		self.bitrate, dummy = creator.combobox(_("再生音質(&Q)"), list(self.bitrateSelection.values()))
+		# チェックボックスは2セル分を使い、1行に1つずつ並べる
 		self.sort = creator.checkbox(_("チャンネル一覧をアルファベット順で表示(&S)"))
+		creator.sizer.SetItemSpan(self.sort.GetParent(), 2)
 		self.channelInfoInEnglish = creator.checkbox(_("チャンネル情報を英語で表示(&E)"))
+		creator.sizer.SetItemSpan(self.channelInfoInEnglish.GetParent(), 2)
 
 		# network
 		creator = views.ViewCreator.ViewCreator(self.viewMode, self.tab, None, wx.VERTICAL, space=20, label=_("ネットワーク"), style=wx.ALL, margin=20)
