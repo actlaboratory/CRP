@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CRP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-28 14:15+0900\n"
-"PO-Revision-Date: 2022-04-28 14:16+0900\n"
+"POT-Creation-Date: 2026-10-14 00:07+0900\n"
+"PO-Revision-Date: 2026-10-13 23:30+0900\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -17,63 +17,63 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.0.1\n"
 
-#: AppBase.py:49
+#: AppBase.py:51
 msgid ""
 "ログ機能の初期化に失敗しました。下記のファイルへのアクセスが可能であることを"
 "確認してください。"
 msgstr ""
-"Failed to initialize logger. Make sure you have permission to access to the "
-"following file:"
+"Failed to initialize logging. Make sure the following file is accessible."
 
-#: AppBase.py:58
+#: AppBase.py:60
 msgid "音声エンジンエラー"
-msgstr "Speech Synthesizer Error"
+msgstr "Speech Engine Error"
 
-#: AppBase.py:58
+#: AppBase.py:60
 msgid ""
 "音声読み上げ機能の初期化に失敗したため、読み上げ機能を使用できません。出力先"
 "の変更をお試しください。"
 msgstr ""
-"Failed to initialize speech function. You cannot use speech. Please try to "
-"change speech output."
+"Failed to initialize speech output, so speech is unavailable. Try changing "
+"the speech output."
 
 #: keymapHandlerBase.py:696 keymapHandlerBase.py:726
 #, python-format
 msgid "%s は存在しないキーです。"
-msgstr "%s does not exist."
+msgstr "%s is not a valid key name."
 
 #: keymapHandlerBase.py:767
 #, python-format
 msgid "%s は使用できないキーです。"
-msgstr "%s is unusable key."
+msgstr "%s cannot be used."
 
 #: keymapHandlerBase.py:776
 msgid "修飾キーのみのパターンは設定できません。"
-msgstr "Keystroke which consists of only modifier keys cannot be added."
+msgstr "A key combination consisting only of modifier keys cannot be set."
 
 #: keymapHandlerBase.py:778
 msgid "このキーは修飾キーと合わせて指定する必要があります。"
-msgstr "This key must be added with some modifier keys."
+msgstr "This key must be combined with a modifier key."
 
 #: keymapHandlerBase.py:783
 msgid "修飾キーでないキーを複数指定することはできません。"
-msgstr "This key combination is not supported."
+msgstr "You cannot combine more than one non-modifier key."
 
 #: keymapHandlerBase.py:786 keymapHandlerBase.py:794
 msgid "このキーは、SHIFTキー以外の修飾キーと合わせて指定する必要があります。"
-msgstr "This key cannot be added with Shift key."
+msgstr "This key must be combined with a modifier key other than Shift."
 
 #: keymapHandlerBase.py:789
 msgid "修飾キーのみの組み合わせは指定できません。"
-msgstr "Keystroke which consists of only modifier keys cannot be added."
+msgstr "A key combination consisting only of modifier keys cannot be set."
 
 #: keymapHandlerBase.py:798
 msgid "この組み合わせは別の用途で予約されているため、利用できません。"
-msgstr "This keystroke is already reserved."
+msgstr ""
+"This key combination is reserved for another purpose and cannot be used."
 
 #: menuItemsDic.py:14
 msgid "チャンネル一覧を更新(&R)"
-msgstr "&Refresh Channels List"
+msgstr "&Refresh Channel List"
 
 #: menuItemsDic.py:15
 msgid "終了(&X)"
@@ -83,23 +83,23 @@ msgstr "E&xit"
 msgid "選択中のチャンネルを再生(&P)"
 msgstr "&Play Selected Channel"
 
-#: menuItemsDic.py:18 views\main.py:74
+#: menuItemsDic.py:18 views\main.py:73
 msgid "停止(&S)"
 msgstr "&Stop"
 
-#: menuItemsDic.py:19 views\main.py:338
+#: menuItemsDic.py:19 views\main.py:376
 msgid "ミュート(&M)"
 msgstr "&Mute"
 
 #: menuItemsDic.py:20
-msgid "再生&URLのコピー"
+msgid "再生URLのコピー(&U)"
 msgstr "Copy Playback &URL"
 
 #: menuItemsDic.py:21
 msgid "再生デバイスの変更(&D)"
 msgstr "Change Playback &Device"
 
-#: menuItemsDic.py:23 views\main.py:175
+#: menuItemsDic.py:23 views\main.py:189
 msgid "オプション(&O)"
 msgstr "&Options"
 
@@ -109,11 +109,11 @@ msgstr "Shortcut &Key Settings"
 
 #: menuItemsDic.py:25
 msgid "グローバルホットキーの設定(&H)"
-msgstr "Global &Hot Key Configuration"
+msgstr "Global &Hotkey Settings"
 
 #: menuItemsDic.py:27
 msgid "最新バージョンを確認(&U)"
-msgstr "Check For &Updates"
+msgstr "Check for &Updates"
 
 #: menuItemsDic.py:28
 msgid "バージョン情報(&V)"
@@ -123,116 +123,117 @@ msgstr "&Version Info"
 msgid "選択中の内容をコピー"
 msgstr "Copy Selected Item"
 
-#: player.py:49 views\main.py:253 views\main.py:274
-msgid "規定のデバイス"
-msgstr "default device"
+#: player.py:58 views\main.py:291 views\main.py:312
+msgid "既定のデバイス"
+msgstr "Default Device"
 
 #: update.py:50 update.py:59 update.py:73 update.py:79 update.py:90
-#: update.py:98 update.py:103 update.py:108 update.py:160
+#: update.py:98 update.py:103 update.py:108 update.py:159
 #: views\updateDialog.py:39
 msgid "アップデート"
-msgstr "update"
+msgstr "Update"
 
 #: update.py:50
 msgid "このバージョンではアップデートを使用できません。"
-msgstr "You cannot use update with this version."
+msgstr "Updates are not available for this version."
 
 #: update.py:59
 msgid ""
 "アップデータが利用できません。お手数ですが、再度ソフトウェアをダウンロードし"
 "てください。"
-msgstr "Updater is not available. Please download this software again."
+msgstr "The updater is not available. Please download the software again."
 
 #: update.py:73
 msgid "サーバーへの通信がタイムアウトしました。"
-msgstr "Connection timed out."
+msgstr "The connection to the server timed out."
 
 #: update.py:79
 msgid "サーバーへの接続に失敗しました。インターネット接続などをご確認ください"
-msgstr "Connection failed. Please check your internet connection."
+msgstr ""
+"Failed to connect to the server. Please check your Internet connection."
 
 #: update.py:85
 msgid "サーバーとの通信中に不明なエラーが発生しました。"
-msgstr "Unknown error has occurred while connecting."
+msgstr "An unknown error occurred while communicating with the server."
 
 #: update.py:90
 msgid "サーバーとの通信に失敗しました。"
-msgstr "Connection failed."
+msgstr "Failed to communicate with the server."
 
 #: update.py:98
 msgid "現在のバージョンが最新です。アップデートの必要はありません。"
-msgstr "This is the latest version."
+msgstr "You are using the latest version. No update is needed."
 
 #: update.py:103
 msgid "リクエストパラメーターが不正です。開発者まで連絡してください"
-msgstr ""
-"Request parameter is invalid. Please contact the developer for further "
-"assistance."
+msgstr "Invalid request parameters. Please contact the developer."
 
 #: update.py:108
 msgid "アップデーターが登録されていません。開発者に連絡してください。"
-msgstr "Updater is not registered. Please contact the developer."
+msgstr "The updater is not registered. Please contact the developer."
 
-#: update.py:160
+#: update.py:159
 msgid ""
 "ダウンロードが完了しました。\n"
 "ソフトウェア終了時に、自動でアップデートされます。"
 msgstr ""
-"Download has successfully finished.\n"
-"Update will be started when closing the application."
+"Download complete.\n"
+"The update will be applied automatically when you exit the software."
 
-#: views\base.py:68
+#: views\base.py:70
 msgid "現在メニューは操作できません"
-msgstr "You cannot use the menu at the moment."
+msgstr "The menu cannot be used at the moment."
 
-#: views\base.py:115
+#: views\base.py:118
 msgid ""
 "で設定されたショートカットキーが正しくありません。キーの重複、存在しないキー"
 "名の指定、使用できないキーパターンの指定などが考えられます。以下のキーの設定"
 "内容をご確認ください。\n"
 "\n"
 msgstr ""
-"keyboard shortcut is invalid. Please check for conflicting / unusable key "
-"combinations and key names.\n"
+" contains invalid shortcut keys. They may be duplicated, use nonexistent key "
+"names, or use unsupported key combinations. Please check the following key "
+"settings.\n"
+"\n"
 
-#: views\base.py:118 views\fontManager.py:25 views\fontManager.py:50
-#: views\globalKeyConfig.py:61 views\KeyValueSettingDialogBase.py:297
-#: views\KeyValueSettingDialogBase.py:348 views\main.py:56
+#: views\base.py:121 views\fontManager.py:25 views\fontManager.py:50
+#: views\globalKeyConfig.py:61 views\KeyValueSettingDialogBase.py:301
+#: views\KeyValueSettingDialogBase.py:352 views\main.py:55
 #: views\updateDialog.py:66
 msgid "エラー"
-msgstr "error"
+msgstr "Error"
 
 #: views\fontManager.py:25
 msgid ""
 "設定されているフォント情報が不正です。デフォルトのフォントを適用します。"
-msgstr "Font configuration is invalid. Default settings will be applied."
+msgstr "The font settings are invalid. The default font will be applied."
 
 #: views\fontManager.py:50
 msgid "原因不明のエラーにより、フォントの変更に失敗しました。"
-msgstr "Font configuration has failed."
+msgstr "Failed to change the font due to an unknown error."
 
 #: views\globalKeyConfig.py:20 views\globalKeyConfig.py:74
 msgid "名前"
-msgstr "name"
+msgstr "Name"
 
 #: views\globalKeyConfig.py:21
 msgid "ショートカット"
-msgstr "shortcut"
+msgstr "Shortcut"
 
 #: views\globalKeyConfig.py:22 views\globalKeyConfig.py:74
 msgid "識別子"
-msgstr "identifier"
+msgstr "Identifier"
 
-#: views\globalKeyConfig.py:31 views\main.py:222
+#: views\globalKeyConfig.py:31 views\main.py:260
 msgid "ショートカットキーの設定"
-msgstr "Shortcut Key Configuration"
+msgstr "Shortcut Key Settings"
 
 #: views\globalKeyConfig.py:54 views\globalKeyConfig.py:71
 #: views\globalKeyConfig.py:102 views\globalKeyConfig.py:107
 #: views\globalKeyConfig.py:120 views\globalKeyConfig.py:128
 #: views\globalKeyConfig.py:138 views\globalKeyConfig.py:143
-#: views\keyConfig.py:57 views\KeyValueSettingDialogBase.py:333
-#: views\main.py:294 views\main.py:308
+#: views\keyConfig.py:57 views\KeyValueSettingDialogBase.py:337
+#: views\main.py:332 views\main.py:346
 msgid "なし"
 msgstr "None"
 
@@ -243,78 +244,78 @@ msgid ""
 "\n"
 "%(command)s"
 msgstr ""
-"%(key)s is configured in following items.\\n\n"
+"The key %(key)s is assigned to more than one of the following items.\n"
 "\n"
 "%(command)s"
 
 #: views\globalKeyConfig.py:74
 msgid "ショートカット1"
-msgstr "shortcut 1"
+msgstr "Shortcut 1"
 
 #: views\globalKeyConfig.py:74
 msgid "ショートカット2"
-msgstr "shortcut 2"
+msgstr "Shortcut 2"
 
 #: views\globalKeyConfig.py:74
 msgid "ショートカット3"
-msgstr "shortcut 3"
+msgstr "Shortcut 3"
 
 #: views\globalKeyConfig.py:74
 msgid "ショートカット4"
-msgstr "shortcut 4"
+msgstr "Shortcut 4"
 
 #: views\globalKeyConfig.py:74
 msgid "ショートカット5"
-msgstr "shortcut 5"
+msgstr "Shortcut 5"
 
-#: views\globalKeyConfig.py:75 views\settingsDialog.py:53
+#: views\globalKeyConfig.py:75 views\settingsDialog.py:56
 msgid "設定"
-msgstr "settings"
+msgstr "Settings"
 
 #: views\globalKeyConfig.py:80
 msgid "登録内容の入力"
-msgstr "register set contents"
+msgstr "Edit Shortcuts"
 
 #: views\globalKeyConfig.py:122
 msgid "このショートカットは変更できません。"
-msgstr "This shortcut cannot be modified."
+msgstr "This shortcut cannot be changed."
 
 #: views\globalKeyConfig.py:127 views\globalKeyConfig.py:130
 msgid "設定完了"
-msgstr "Setup has been completed"
+msgstr "Done"
 
 #: views\globalKeyConfig.py:127
 msgid "解除しました。"
-msgstr "unregistered."
+msgstr "The shortcut has been cleared."
 
 #: views\globalKeyConfig.py:130
 #, python-format
 msgid "%s に設定しました。"
-msgstr "Registered as %s."
+msgstr "Set to %s."
 
 #: views\keyConfig.py:31
 msgid "キー設定"
-msgstr "Key Configuration"
+msgstr "Key Settings"
 
 #: views\keyConfig.py:39
 msgid ""
 "設定するには、使用したいキーの組み合わせを押します。\n"
 "設定を解除するには、Escキーを押します。"
 msgstr ""
-"Press preferred key combination to register.\n"
-"Press Esc to remove configuration."
+"Press the key combination you want to use.\n"
+"To clear the shortcut, press Esc."
 
 #: views\keyConfig.py:45
 msgid "設定解除"
-msgstr "remove registered configuration"
+msgstr "Clear"
 
-#: views\KeyValueSettingDialogBase.py:54
+#: views\KeyValueSettingDialogBase.py:52
 msgid "現在の登録内容"
-msgstr "Current Settings"
+msgstr "Current settings"
 
 #: views\KeyValueSettingDialogBase.py:75
 msgid "追加(&A)"
-msgstr "&Add "
+msgstr "&Add"
 
 #: views\KeyValueSettingDialogBase.py:76
 msgid "変更(&M)"
@@ -324,193 +325,211 @@ msgstr "&Modify"
 msgid "削除(&D)"
 msgstr "&Delete"
 
-#: views\KeyValueSettingDialogBase.py:83 views\KeyValueSettingDialogBase.py:274
-#: views\SimpleInputDialog.py:39
+#: views\KeyValueSettingDialogBase.py:84 views\KeyValueSettingDialogBase.py:278
+#: views\SimpleInputDialog.py:55
 msgid "ＯＫ"
 msgstr "OK"
 
-#: views\KeyValueSettingDialogBase.py:84 views\KeyValueSettingDialogBase.py:275
-#: views\settingsDialog.py:95 views\SimpleInputDialog.py:40
+#: views\KeyValueSettingDialogBase.py:85 views\KeyValueSettingDialogBase.py:279
+#: views\settingsDialog.py:100 views\SimpleInputDialog.py:56
 #: views\updateDialog.py:45
 msgid "キャンセル"
-msgstr "cancel"
+msgstr "Cancel"
 
-#: views\KeyValueSettingDialogBase.py:125
-#: views\KeyValueSettingDialogBase.py:155
+#: views\KeyValueSettingDialogBase.py:126
+#: views\KeyValueSettingDialogBase.py:156
 #, python-format
 msgid "この%sは既に登録されています。登録を上書きしますか？"
-msgstr "This %s is already registered. Do you wish to overwrite?"
+msgstr "This %s is already registered. Do you want to overwrite it?"
 
-#: views\KeyValueSettingDialogBase.py:125
-#: views\KeyValueSettingDialogBase.py:155
+#: views\KeyValueSettingDialogBase.py:126
+#: views\KeyValueSettingDialogBase.py:156
 msgid "上書き確認"
-msgstr "Overwriting Confirmation"
+msgstr "Confirm Overwrite"
 
-#: views\KeyValueSettingDialogBase.py:297
+#: views\KeyValueSettingDialogBase.py:301
 #, python-format
 msgid "%sを空白や半角の=を含む値に設定することはできません。"
-msgstr "%s cannot include space and equals sign."
+msgstr "%s cannot contain spaces or the = character."
 
-#: views\KeyValueSettingDialogBase.py:337
+#: views\KeyValueSettingDialogBase.py:341
 #, python-format
 msgid "%(v1)sと%(v2)sに同じショートカットキー%(key)sが設定されています。\n"
-msgstr "%(v1)s and %(v2)s have same shortcut key %(key)s.\n"
+msgstr "The same shortcut key %(key)s is assigned to %(v1)s and %(v2)s.\n"
 
-#: views\KeyValueSettingDialogBase.py:340
+#: views\KeyValueSettingDialogBase.py:344
 #, python-format
 msgid ""
 "%(v1)s、%(v2)sなど計%(count)d箇所に同じショートカットキー%(key)sが設定されて"
 "います。\n"
-msgstr "%(key)s is registered at %(count)i items, %(v1)s, %(v2)s and more.\n"
+msgstr ""
+"The same shortcut key %(key)s is assigned to %(count)d items, including "
+"%(v1)s and %(v2)s.\n"
 
-#: views\KeyValueSettingDialogBase.py:344
+#: views\KeyValueSettingDialogBase.py:348
 #, python-format
 msgid ""
 "設定されたショートカット%sが認識できません。お手数ですが、このエラーメッセー"
 "ジを作者へご連絡ください。\n"
 msgstr ""
-"Configured shortcut %s cannot be recognized. Please contact the developer "
-"for further assistance.\n"
+"The shortcut %s cannot be recognized. Please report this error message to "
+"the developer.\n"
 
-#: views\KeyValueSettingDialogBase.py:346
+#: views\KeyValueSettingDialogBase.py:350
 #, python-format
 msgid ""
 "%(command)sに設定されたショートカットキー%(key)sは、別の場所で利用されていま"
 "す。\n"
 msgstr ""
-"The key combination %(key)s, configured as %(command)s, is reserved.\\n\n"
+"The shortcut key %(key)s assigned to %(command)s is already used elsewhere.\n"
 
-#: views\main.py:53
+#: views\main.py:52
 msgid ""
 "で設定されたホットキーが正しくありません。キーの重複、存在しないキー名の指"
 "定、使用できないキーパターンの指定などが考えられます。以下のキーの設定内容を"
 "ご確認ください。\n"
 "\n"
 msgstr ""
-"hotkey is invalid. Please check for conflicting / unusable key combinations "
-"and key names.\n"
+" contains invalid hotkeys. They may be duplicated, use nonexistent key "
+"names, or use unsupported key combinations. Please check the following key "
+"settings.\n"
 "\n"
 
-#: views\main.py:63
+#: views\main.py:62
 msgid "チャンネル一覧(&C)"
-msgstr "&Channels List"
+msgstr "&Channel List"
 
-#: views\main.py:66
+#: views\main.py:65
 msgid "説明"
-msgstr "description"
+msgstr "Description"
 
-#: views\main.py:71
+#: views\main.py:70
 msgid "選択中のチャンネルを再生"
 msgstr "Play Selected Channel"
 
-#: views\main.py:80 views\main.py:82 views\main.py:335 views\main.py:337
+#: views\main.py:79 views\main.py:81 views\main.py:373 views\main.py:375
 msgid "ミュートをオンにする"
-msgstr "mute"
+msgstr "Mute"
 
-#: views\main.py:83
+#: views\main.py:82
 msgid "音量(&V)"
 msgstr "&Volume"
 
-#: views\main.py:86
+#: views\main.py:85
 msgid "現在再生中(&N)"
 msgstr "&Now Playing"
 
-#: views\main.py:87
+#: views\main.py:86
 msgid "項目"
 msgstr "Item"
 
-#: views\main.py:88
+#: views\main.py:87
 msgid "内容"
-msgstr "Details"
+msgstr "Value"
+
+#: views\main.py:88
+msgid "タイトル"
+msgstr "Title"
 
 #: views\main.py:89
-msgid "タイトル"
-msgstr "title"
+msgid "アーティスト"
+msgstr "Artist"
 
 #: views\main.py:90
-msgid "アーティスト"
-msgstr "artist"
-
-#: views\main.py:91
 msgid "アルバム"
-msgstr "album"
+msgstr "Album"
 
-#: views\main.py:93 views\main.py:116
+#: views\main.py:92 views\main.py:117
 msgid "チャンネル"
 msgstr "Channel"
 
-#: views\main.py:114
+#: views\main.py:113
 msgid ""
 "チャンネル一覧の取得に失敗しました。\n"
 "インターネット接続をご確認の上、しばらくたってから再度お試しください。\n"
 "この問題が繰り返し発生する場合は、開発者までご連絡ください。"
 msgstr ""
-"Failed to get channels list.\n"
-"Check for the internet connection, and try agen later.\n"
-"If this problem occurs many times, contact to the developer."
+"Failed to get the channel list.\n"
+"Please check your Internet connection and try again later.\n"
+"If this problem persists, please contact the developer."
 
-#: views\main.py:173
+#: views\main.py:187
 msgid "ファイル(&F)"
 msgstr "&File"
 
-#: views\main.py:174
+#: views\main.py:188
 msgid "再生(&P)"
 msgstr "&Play"
 
-#: views\main.py:176
+#: views\main.py:190
 msgid "ヘルプ(&H)"
 msgstr "&Help"
 
-#: views\main.py:214
+#: views\main.py:230 views\main.py:247 views\main.py:252
 msgid "再生URLのコピー"
 msgstr "Copy Playback URL"
 
-#: views\main.py:214
-msgid "コピーしました。"
-msgstr "Copied."
+#: views\main.py:230
+msgid "チャンネルを選択してください。"
+msgstr "Please select a channel."
 
-#: views\main.py:229
-msgid "グローバルホットキーの設定"
-msgstr "Global Hot Keys Settings"
-
-#: views\main.py:325 views\main.py:327
-msgid "ミュートをオフにする"
-msgstr "unmute"
-
-#: views\main.py:328
-msgid "ミュート解除(&M)"
-msgstr "Un&mute"
-
-#: views\main.py:367
+#: views\main.py:236 views\main.py:407
 msgid ""
 "ログインに失敗しました。\n"
 "インターネット接続をご確認の上、しばらくたってから再度お試しください。\n"
 "この問題が繰り返し発生する場合は、開発者までご連絡ください。"
 msgstr ""
-"Login failed.\n"
-"Check for the internet connection, and try again later.\n"
-"If this problem occurs many times, contact to the developer."
+"Failed to log in.\n"
+"Please check your Internet connection and try again later.\n"
+"If this problem persists, please contact the developer."
 
-#: views\main.py:370
+#: views\main.py:239 views\main.py:410
 msgid ""
 "ログインに失敗しました。ユーザ名／パスワードの設定内容をご確認ください。"
-msgstr "Login failed. Check for the username/password."
+msgstr "Failed to log in. Please check your user name and password settings."
 
-#: views\main.py:379
+#: views\main.py:242 views\main.py:413
 msgid "このチャンネルは、フリー版ではご利用いただけません。"
-msgstr "This channel is unavailable for the free version."
+msgstr "This channel is not available in the free version."
+
+#: views\main.py:247
+msgid ""
+"このURLには、Calm Radioのアカウントにログインするための情報が含まれていま"
+"す。\n"
+"このURLを他の人に教えたり、インターネット上に公開したりしないでください。\n"
+"コピーしますか？"
+msgstr ""
+"This URL contains information for logging in to your Calm Radio account.\n"
+"Do not share this URL with others or publish it on the Internet.\n"
+"Do you want to copy it?"
+
+#: views\main.py:252
+msgid "コピーしました。"
+msgstr "Copied."
+
+#: views\main.py:267
+msgid "グローバルホットキーの設定"
+msgstr "Global Hotkey Settings"
+
+#: views\main.py:363 views\main.py:365
+msgid "ミュートをオフにする"
+msgstr "Unmute"
+
+#: views\main.py:366
+msgid "ミュート解除(&M)"
+msgstr "Un&mute"
 
 #: views\refresh.py:17
 msgid "チャンネル一覧を更新"
-msgstr "Refresh Channels List"
+msgstr "Refresh Channel List"
 
 #: views\refresh.py:24
 msgid "チャンネル一覧を取得しています..."
-msgstr "Getting channels list..."
+msgstr "Getting the channel list..."
 
-#: views\settingsDialog.py:33 views\settingsDialog.py:43
+#: views\settingsDialog.py:33
 msgid "標準"
-msgstr "normal"
+msgstr "Standard"
 
 #: views\settingsDialog.py:34
 msgid "ダーク"
@@ -518,110 +537,123 @@ msgstr "Dark"
 
 #: views\settingsDialog.py:37
 msgid "画面幅で折り返し"
-msgstr "Wrap by screen width"
+msgstr "Wrap at window width"
 
 #: views\settingsDialog.py:38
 msgid "折り返さない"
 msgstr "Don't wrap"
 
-#: views\settingsDialog.py:42
-msgid "高解像度"
-msgstr "High Definition"
-
-#: views\settingsDialog.py:44
-msgid "携帯"
-msgstr "Mobile"
-
-#: views\settingsDialog.py:64
-msgid "カテゴリ選択"
-msgstr "category"
-
 #: views\settingsDialog.py:67
-msgid "一般"
-msgstr "general"
+msgid "カテゴリ選択"
+msgstr "Category"
 
-#: views\settingsDialog.py:68
-msgid "ログ記録レベル(&L)"
-msgstr "&Logging Level"
+#: views\settingsDialog.py:70
+msgid "一般"
+msgstr "General"
 
 #: views\settingsDialog.py:71
+msgid "ログ記録レベル(&L)"
+msgstr "&Logging level"
+
+#: views\settingsDialog.py:74
 msgid "表示/言語"
 msgstr "Display/Language"
 
-#: views\settingsDialog.py:72
+#: views\settingsDialog.py:75
 msgid "言語(&L)"
 msgstr "&Language"
 
-#: views\settingsDialog.py:73
+#: views\settingsDialog.py:76
 msgid "画面表示モード(&D)"
 msgstr "&Display mode"
 
-#: views\settingsDialog.py:74
-msgid "テキストの折り返し(&W)"
-msgstr "Text &Wrap "
-
 #: views\settingsDialog.py:77
+msgid "テキストの折り返し(&W)"
+msgstr "Text &wrapping"
+
+#: views\settingsDialog.py:80
 msgid "Calm Radio"
 msgstr "Calm Radio"
 
-#: views\settingsDialog.py:78
+#: views\settingsDialog.py:81
 msgid "ユーザ名(&U)"
 msgstr "&User name"
 
-#: views\settingsDialog.py:80
+#: views\settingsDialog.py:83
 msgid "パスワード(&P)"
 msgstr "&Password"
 
-#: views\settingsDialog.py:82
-msgid "再生音質(&Q)"
-msgstr "&Quality"
-
 #: views\settingsDialog.py:85
-msgid "ネットワーク"
-msgstr "network"
+msgid "再生音質(&Q)"
+msgstr "Playback &quality"
 
 #: views\settingsDialog.py:86
-msgid "起動時に更新を確認(&U)"
-msgstr "Automatically Check for &Updates on startup"
+msgid "チャンネル一覧をアルファベット順で表示(&S)"
+msgstr "&Sort the channel list alphabetically"
 
 #: views\settingsDialog.py:87
-msgid "プロキシサーバーの情報を手動で設定する(&M)"
-msgstr "&Manually configure proxy information"
-
-#: views\settingsDialog.py:88
-msgid "サーバーURL"
-msgstr "server URL"
+msgid "チャンネル情報を英語で表示(&E)"
+msgstr "Show channel information in &English"
 
 #: views\settingsDialog.py:90
+msgid "ネットワーク"
+msgstr "Network"
+
+#: views\settingsDialog.py:91
+msgid "起動時に更新を確認(&U)"
+msgstr "Check for &updates at startup"
+
+#: views\settingsDialog.py:92
+msgid "プロキシサーバーの情報を手動で設定する(&M)"
+msgstr "&Manually configure the proxy server"
+
+#: views\settingsDialog.py:93
+msgid "サーバーURL"
+msgstr "Server URL"
+
+#: views\settingsDialog.py:95
 msgid "ポート番号"
-msgstr "port number"
+msgstr "Port number"
+
+#: views\SimpleInputDialog.py:87 views\SimpleInputDialog.py:96
+msgid "入力内容に誤りがあります。"
+msgstr "The input is invalid."
+
+#: views\SimpleInputDialog.py:87
+#, python-format
+msgid "行: %d"
+msgstr "Line: %d"
+
+#: views\SimpleInputDialog.py:92
+msgid "有効な値が入力されていません。"
+msgstr "No valid value has been entered."
 
 #: views\updateDialog.py:23
 #, python-format
 msgid "アップデート - %s"
-msgstr "update - %s"
+msgstr "Update - %s"
 
 #: views\updateDialog.py:32
 #, python-format
 msgid "version %s にアップデートできます。"
-msgstr "Version %s is now available."
+msgstr "Version %s is available."
 
 #: views\updateDialog.py:33
 msgid "進行状況"
-msgstr "progress"
+msgstr "Progress"
 
 #: views\updateDialog.py:35
 #, python-format
 msgid "version %s アップデート情報"
-msgstr "version %s update information"
+msgstr "What's new in version %s"
 
 #: views\updateDialog.py:41
 msgid "緊急のお知らせがあります。"
-msgstr "There is an important information."
+msgstr "There is an important notice."
 
 #: views\updateDialog.py:44
 msgid "お知らせページへ"
-msgstr "Go to the information page"
+msgstr "Go to the notice page"
 
 #: views\updateDialog.py:59
 msgid "アップデートをダウンロード中..."
@@ -630,37 +662,42 @@ msgstr "Downloading update..."
 #: views\updateDialog.py:66
 msgid ""
 "updater.exeが見つかりませんでした。誤って削除したかなどをご確認ください。"
-msgstr "Updater.exe is not found."
+msgstr ""
+"updater.exe was not found. Please check whether it has been deleted by "
+"mistake."
 
 #: views\versionDialog.py:21
 msgid "バージョン情報"
-msgstr "version information"
+msgstr "Version Information"
 
 #: views\versionDialog.py:30
 msgid "ソフトウェアバージョン"
-msgstr "software version"
+msgstr "Software version"
 
 #: views\versionDialog.py:31
 msgid "アップデータバージョン"
-msgstr "updater version"
+msgstr "Updater version"
 
 #: views\versionDialog.py:33
 msgid "ライセンス"
-msgstr "license"
+msgstr "License"
 
 #: views\versionDialog.py:34
 msgid "開発元"
-msgstr "developers"
+msgstr "Developer"
 
 #: views\versionDialog.py:35
 msgid "ソフトウェア詳細情報"
-msgstr "software details"
+msgstr "Software details"
 
 #: views\versionDialog.py:37
 msgid ""
 "ライセンス/著作権情報については、同梱の license.txt を参照してください。"
-msgstr "See the included license.txt for licensing / copyright information."
+msgstr "See the included license.txt for license and copyright information."
 
 #: views\versionDialog.py:49
 msgid "閉じる"
-msgstr "close"
+msgstr "Close"
+
+#~ msgid "再生&URLのコピー"
+#~ msgstr "Copy Playback &URL"

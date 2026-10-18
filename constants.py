@@ -8,9 +8,9 @@ import wx
 APP_FULL_NAME = "Calm Radio Player"#アプリケーションの完全な名前
 APP_NAME="CRP"#アプリケーションの名前
 APP_ICON = None
-APP_VERSION="1.0.0"
-APP_LAST_RELEASE_DATE="2022-04-29"
-APP_COPYRIGHT_YEAR="2022"
+APP_VERSION="1.1.0"
+APP_LAST_RELEASE_DATE="2026-10-18"
+APP_COPYRIGHT_YEAR="2022-2026"
 APP_LICENSE="GPL v2(or later)"
 APP_DEVELOPERS="Kazto Kitabatake, ACT Laboratory"
 APP_DEVELOPERS_URL="https://actlab.org/"
@@ -37,7 +37,7 @@ HALF_CHECKED=wx.CHK_UNDETERMINED
 FULL_CHECKED=wx.CHK_CHECKED
 
 #build関連定数
-BASE_PACKAGE_URL = None
+BASE_PACKAGE_URL = "https://github.com/actlaboratory/CRP/releases/download/1.0.0/CRP-1.0.0.zip"
 PACKAGE_CONTAIN_ITEMS = ("resources",)#パッケージに含めたいファイルやfolderがあれば指定
 NEED_HOOKS = ()#pyinstallerのhookを追加したい場合は指定
 STARTUP_FILE = "crp.py"#起動用ファイルを指定

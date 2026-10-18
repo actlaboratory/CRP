@@ -4,7 +4,6 @@
 # Copyright (C) 2019-2021 yamahubuki <itiro.ishino@gmail.com>
 
 import pyperclip
-import urllib.parse
 import wx
 
 import ConfigManager
@@ -107,20 +106,34 @@ class MainView(BaseView):
 		d = refresh.Dialog()
 		d.Initialize()
 		d.Show(False)
-		self.tree.DeleteAllItems()
-		self.channels = self.app.calmradio.getAllChannels()
-		if self.channels == errorCodes.CONNECTION_ERROR:
+		result = self.app.calmradio.getAllChannels()
+		if result == errorCodes.CONNECTION_ERROR:
+			# 取得に失敗した場合は、それまでの一覧を残しておく
 			d.Destroy()
 			errorDialog(_("チャンネル一覧の取得に失敗しました。\nインターネット接続をご確認の上、しばらくたってから再度お試しください。\nこの問題が繰り返し発生する場合は、開発者までご連絡ください。"))
 			return
+		self.channels = result
+		self.tree.DeleteAllItems()
 		root = self.tree.AddRoot(_("チャンネル"), data=None)
-		for k, v in self.channels.items():
-			category = self.tree.AppendItem(root, k.getName(), data=k)
-			for i in v:
-				channel = self.tree.AppendItem(category, i.getName(), data=i)
+		for genre, categories in self.channels.items():
+			genreItem = self.tree.AppendItem(root, genre.getName(), data=genre)
+			for category, channels in categories.items():
+				categoryItem = self.tree.AppendItem(genreItem, category.getName(), data=category)
+				for channel in channels:
+					self.tree.AppendItem(categoryItem, channel.getName(), data=channel)
 		self.tree.Expand(root)
 		d.Destroy()
 		self.tree.SelectItem(root)
+
+	def getSelectedChannel(self):
+		"""ツリーで選択中のチャンネルを返す。チャンネル以外を選択中、またはツリーが空の場合はNone"""
+		item = self.tree.GetFocusedItem()
+		if not item.IsOk():
+			return None
+		data = self.tree.GetItemData(item)
+		if not isinstance(data, calmradio.main.Channel):
+			return None
+		return data
 
 
 class Menu(BaseMenu):
@@ -151,6 +164,7 @@ class Menu(BaseMenu):
 			"PLAY_PLAY",
 			"PLAY_STOP",
 			"PLAY_MUTE",
+			"PLAY_COPY_URL",
 		])
 		self.hDeviceMenu = wx.Menu()
 		self.RegisterMenuCommand(self.hPlayMenu, "PLAY_CHANGE_DEVICE", subMenu=self.hDeviceMenu)
@@ -210,9 +224,30 @@ class Events(BaseEvents):
 			self.onMuteButton()
 
 		if selected == menuItemsStore.getRef("PLAY_COPY_URL"):
-			url = globalVars.app.player.getPlaybackUrl()
-			if len(url) == 0:
+			# 選択中のチャンネルを取得
+			item = self.parent.getSelectedChannel()
+			if item is None:
+				dialog(_("再生URLのコピー"), _("チャンネルを選択してください。"))
 				return
+			
+			# URLを生成（モデル層のメソッドを使用）
+			url, recentKey, error = item.generatePlaybackUrl(self.parent.app.calmradio, self.parent.app.config)
+			if error == errorCodes.CONNECTION_ERROR:
+				errorDialog(_("ログインに失敗しました。\nインターネット接続をご確認の上、しばらくたってから再度お試しください。\nこの問題が繰り返し発生する場合は、開発者までご連絡ください。"))
+				return
+			if error == errorCodes.LOGIN_FAILED:
+				errorDialog(_("ログインに失敗しました。ユーザ名／パスワードの設定内容をご確認ください。"))
+				return
+			if error == errorCodes.NOT_SUPPORTED:
+				errorDialog(_("このチャンネルは、フリー版ではご利用いただけません。"))
+				return
+			
+			# ログインしているとURLにユーザー名とトークンが入るため、コピーする前に確認する
+			if self.parent.app.calmradio.getUser():
+				if yesNoDialog(_("再生URLのコピー"), _("このURLには、Calm Radioのアカウントにログインするための情報が含まれています。\nこのURLを他の人に教えたり、インターネット上に公開したりしないでください。\nコピーしますか？")) != wx.ID_YES:
+					return
+
+			# クリップボードにコピー
 			pyperclip.copy(url)
 			dialog(_("再生URLのコピー"), _("コピーしました。"))
 
@@ -253,7 +288,7 @@ class Events(BaseEvents):
 
 		elif selected >= constants.DEVICE_MENU_START:
 			name = self.devices[selected]
-			if name == _("規定のデバイス"):
+			if name == _("既定のデバイス"):
 				globalVars.app.player.setDevice("")
 			else:
 				globalVars.app.player.setDevice(name)
@@ -274,7 +309,7 @@ class Events(BaseEvents):
 			if current and (current in devices):
 				menu.Check(devices.index(current) + constants.DEVICE_MENU_START, True)
 			else:
-				menu.Check(devices.index(_("規定のデバイス")) + constants.DEVICE_MENU_START, True)
+				menu.Check(devices.index(_("既定のデバイス")) + constants.DEVICE_MENU_START, True)
 
 	def setKeymap(self, identifier, ttl, keymap=None, filter=None):
 		if keymap:
@@ -345,8 +380,8 @@ class Events(BaseEvents):
 		self.parent.app.player.setVolume(value)
 
 	def onChannelSelected(self, event):
-		item = self.parent.tree.GetItemData(self.parent.tree.GetFocusedItem())
-		if type(item) != calmradio.main.Channel:
+		item = self.parent.getSelectedChannel()
+		if item is None:
 			self.parent.description.Clear()
 			self.parent.description.Disable()
 			self.parent.playButton.Disable()
@@ -361,30 +396,23 @@ class Events(BaseEvents):
 		self.parent.menu.EnableMenu("PLAY_PLAY", True)
 
 	def onChannelActivated(self, event):
-		item = self.parent.tree.GetItemData(self.parent.tree.GetFocusedItem())
-		if type(item) != calmradio.main.Channel:
+		item = self.parent.getSelectedChannel()
+		if item is None:
+			event.Skip()
 			return
-		streams = item.getStreams()
-		result = self.parent.app.calmradio.auth()
-		if result == errorCodes.CONNECTION_ERROR:
+		
+		# URLを生成（モデル層のメソッドを使用）
+		url, recentKey, error = item.generatePlaybackUrl(self.parent.app.calmradio, self.parent.app.config)
+		if error == errorCodes.CONNECTION_ERROR:
 			errorDialog(_("ログインに失敗しました。\nインターネット接続をご確認の上、しばらくたってから再度お試しください。\nこの問題が繰り返し発生する場合は、開発者までご連絡ください。"))
 			return
-		if result == errorCodes.LOGIN_FAILED:
+		if error == errorCodes.LOGIN_FAILED:
 			errorDialog(_("ログインに失敗しました。ユーザ名／パスワードの設定内容をご確認ください。"))
 			return
-		if self.parent.app.calmradio.isActive():
-			# premium
-			bitrate = self.parent.app.config.getstring("play", "bitrate", "320", constants.AVAILABLE_BITRATE)
-			url = streams[bitrate]
-			recentKey = "vip"
-		else:
-			if "free_128" not in streams:
-				errorDialog(_("このチャンネルは、フリー版ではご利用いただけません。"))
-				return
-			url = streams["free_128"]
-			recentKey = "free"
-		if self.parent.app.calmradio.getUser():
-			url = url.replace("https://", "https://%s:%s@" % (urllib.parse.quote(self.parent.app.calmradio.getUser()), urllib.parse.quote(self.parent.app.calmradio.getToken())))
+		if error == errorCodes.NOT_SUPPORTED:
+			errorDialog(_("このチャンネルは、フリー版ではご利用いただけません。"))
+			return
+		
 		globalVars.app.player.setPlaybackUrl(url)
 		if self.nowPlayingChecker:
 			self.nowPlayingChecker.exit()

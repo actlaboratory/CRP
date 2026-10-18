@@ -38,10 +38,13 @@ class Dialog(BaseDialog):
 		"off": _("折り返さない")
 	}
 	languageSelection = constants.SUPPORTING_LANGUAGE
+	# 音質の選択肢は、Calm Radio公式サイトのプレーヤーの英語版の表記をそのまま使う。
+	# 公式サイトは英語が原文で、日本語版は機械翻訳のため、翻訳せずにどの表示言語でも英語で表示する。
+	# 公式サイトの表記が変わらない限り、変更したり_()で囲んだりしないこと
 	bitrateSelection = {
-		"320": _("高解像度"),
-		"192": _("標準"),
-		"64": _("携帯"),
+		"320": "HD",
+		"192": "High",
+		"64": "Mobile",
 	}
 
 	def __init__(self):
@@ -80,6 +83,11 @@ class Dialog(BaseDialog):
 		self.pass_, dummy = creator.inputbox(_("パスワード(&P)"), x=400, style=wx.TE_PASSWORD, sizerFlag=wx.EXPAND)
 		self.pass_.hideScrollBar(wx.HORIZONTAL)
 		self.bitrate, dummy = creator.combobox(_("再生音質(&Q)"), list(self.bitrateSelection.values()))
+		# チェックボックスは2セル分を使い、1行に1つずつ並べる
+		self.sort = creator.checkbox(_("チャンネル一覧をアルファベット順で表示(&S)"))
+		creator.sizer.SetItemSpan(self.sort.GetParent(), 2)
+		self.channelInfoInEnglish = creator.checkbox(_("チャンネル情報を英語で表示(&E)"))
+		creator.sizer.SetItemSpan(self.channelInfoInEnglish.GetParent(), 2)
 
 		# network
 		creator = views.ViewCreator.ViewCreator(self.viewMode, self.tab, None, wx.VERTICAL, space=20, label=_("ネットワーク"), style=wx.ALL, margin=20)
@@ -107,6 +115,8 @@ class Dialog(BaseDialog):
 		self._setValue(self.user, "user", "user", configType.STRING)
 		self._setValue(self.pass_, "user", "pass", configType.STRING)
 		self._setValue(self.bitrate, "play", "bitrate", configType.DIC, self.bitrateSelection)
+		self._setValue(self.sort, "view", "sort", configType.BOOL)
+		self._setValue(self.channelInfoInEnglish, "view", "channel_info_in_english", configType.BOOL, False)
 
 		# network
 		self._setValue(self.update, "general", "update", configType.BOOL)

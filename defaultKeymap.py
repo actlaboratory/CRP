@@ -10,6 +10,7 @@ defaultKeymap["mainView"] = {
 	"PLAY_PLAY": "ctrl+p",
 	"PLAY_STOP": "ctrl+s",
 	"PLAY_MUTE": "ctrl+m",
+	"PLAY_COPY_URL": "ctrl+shift+c",
 
 	"OPTION_OPTION": "",
 	"OPTION_KEY_CONFIG": "",

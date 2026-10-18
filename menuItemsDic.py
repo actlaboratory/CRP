@@ -5,8 +5,8 @@ import re
 def getValueString(ref_id):
 	""" ナビキーとダイアログ文字列を消去した文字列を取り出し """
 	dicVal = dic[ref_id]
-	s = re.sub("\.\.\.$", "", dicVal)
-	s = re.sub("\(&.\)$", "", s)
+	s = re.sub(r"\.\.\.$", "", dicVal)
+	s = re.sub(r"\(&.\)$", "", s)
 	return re.sub("&", "", s)
 
 
@@ -17,7 +17,7 @@ dic = {
 	"PLAY_PLAY": _("選択中のチャンネルを再生(&P)"),
 	"PLAY_STOP": _("停止(&S)"),
 	"PLAY_MUTE": _("ミュート(&M)"),
-	"PLAY_COPY_URL": _("再生&URLのコピー"),
+	"PLAY_COPY_URL": _("再生URLのコピー(&U)"),
 	"PLAY_CHANGE_DEVICE": _("再生デバイスの変更(&D)"),
 
 	"OPTION_OPTION": _("オプション(&O)") + "...",
