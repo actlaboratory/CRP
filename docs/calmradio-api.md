@@ -18,6 +18,7 @@ CRPが使っているCalm RadioのAPIについて、仕様、CRPでの使い方�
 | 2022年4月29日 | Version 1.0.0をリリース。v1を使用。マニュアルには、公式アプリはv2を使っていることと、CRPのv2への対応は技術的な理由で極めて困難であることを記載していた |
 | 2026年10月10日 | チャンネル一覧が公式UIと違う原因を調査。v1は2018年以降更新されておらず、公式Webプレイヤーはv2を使っていることを確認した（調査結果は[Issue #1のコメント](https://github.com/actlaboratory/CRP/issues/1#issuecomment-6092041218)） |
 | 2026年10月10日～12日 | v2に対応（[PR #3](https://github.com/actlaboratory/CRP/pull/3)、Version 1.1.0で公開予定）。変更したのはチャンネル一覧の取得だけで、ログイン（`get_token`）とストリームのURLの形式はv1のときのまま使えた |
+| 2026年10月18日 | 公式Webサイトのログインと認証の方法を調査。`get_token`のトークンがv2のAPIでも使えることを確認した（「ログインと認証」の節） |
 
 ## 現在使っているAPI（v2）
 
@@ -83,6 +84,74 @@ CRPでは使っていない項目には、次のようなものがあります�
 - 公式Webプレイヤーは、`?user=<ユーザー名>&pass=<トークン>`のクエリー文字列で渡しています。どちらの方式でも再生できます。
 - 公式サイトの会員向けページからダウンロードできる再生URLのリスト（「VIP URLs AUTH1」）も、CRPと同じ形式のURLです。リストにはv1のチャンネル（562件）しか含まれていません。
 
+## ログインと認証
+
+2026年10月18日に、公式サイトの`templates/calmradio/js/main.js?v=263.11`を調べ、APIの応答を確認した内容です。
+
+### 公式Webサイトのログイン
+
+- ログインページ（`https://calmradio.com/en/login`）のフォーム（`#login_form`）は、`username`、`password`、`remember`、`return`と、JoomlaのCSRF対策用のトークン（名前がランダムな隠しフィールド）を持っています。送信ボタンはreCAPTCHA（`g-recaptcha`）です。
+- フォームの内容は、Joomlaのエンドポイント（`https://calmradio.com/en/login?option=com_ajax&module=calmradio_login&method=login&format=raw`）にPOSTされます。`api.calmradio.com`は使いません。
+- ログインした後のページで、Webプレイヤーは`getUserData()`などで次のCookieを読みます。`main.js`、`global.helpers.js`、`custom.js`のどれもこれらのCookieを設定していないため、ログイン時にサーバーが設定していると考えられます。
+
+| Cookie | 内容 |
+|---|---|
+| `ice-login` | ユーザー名 |
+| `ice-token` | トークン |
+| `ice-vip` | 有料会員かどうか。`parseInt`した値が0以外なら有料会員として扱う |
+
+- `main.js`、`global.helpers.js`、`custom.js`には、`get_token`の呼び出しはありません。
+- reCAPTCHAとCSRF対策用のトークンがあるため、CRPがこの方法でログインするのは現実的ではありません。
+
+### 公式Webプレイヤーの再生
+
+`main.js`の`loadChannel`で、次の順にストリームを選んでいます。
+
+- 有料会員：`vip[0].streams[<ビットレート>]`に`?user=<ユーザー名>&pass=<トークン>`を付けて再生します。代替ストリームに切り替えたときは、`vip[1]`があれば`vip[1]`を使います。
+- 有料会員でない場合（ログインしていない場合を含む）：
+  - TuneInを使える場合は、TuneIn経由で再生します。使えるかどうかは、チャンネルに`tunein_id`があることと、`geo`のAPIの応答（`tune_in`）やページの設定（`data-tunein-integration-enabled`）などで決まります。
+  - そうでなく`free`が空でなければ、`free[0].streams["128"]`を認証情報を付けずに再生します。
+  - どちらでもない場合は、無料で再生できる最初のチャンネルに切り替えて再生し、有料会員向けであることを知らせるポップアップ（`vipAtmos`）を表示します。`vipAtmos`は、環境音（Atmospheres）の機能を無料会員が使おうとしたときにも表示されるポップアップです。文言は確認していません。
+- 章立てのあるオーディオブックのチャンネル：上の処理の後で、`stories.json`の章立て用のストリームに`?username=<ユーザー名>&token=<トークン>`を付けたURLに置き換えます。
+- 有料会員かどうかは、ページを開いてから10秒後とその後60秒ごとに`v2/check`を呼び、`license_count`が1以上かどうかで判定し直しています。
+
+### トークンを使うAPI
+
+公式Webプレイヤーは、ユーザー名とトークンを次のAPIに渡しています。CRPではどれも使っていません。
+
+| 用途 | URL | 渡し方 |
+|---|---|---|
+| 会員種別の確認 | `POST v2/check` | フォームで`username`、`token` |
+| 再生したチャンネルの報告（有料会員以外） | `POST v2/session` | フォームで`username`、`token`、`channel_id` |
+| 最近再生したチャンネル | `GET v2/last_channels` | クエリーで`username`、`token` |
+| 位置情報 | `POST geo` | JSON（`Content-Type: application/json`）で`user`、`token` |
+| 曲の評価の取得と変更 | `GET opinions/tracks/<曲ID>`、`GET opinions/tracks/<曲ID>/like`、`GET opinions/tracks/<曲ID>/dislike` | クエリーで`username`、`token` |
+| チャンネルの非表示 | `POST opinions/channels/<チャンネルID>/hide`（非表示）、`DELETE`（解除）、`GET opinions/channels/visibility`（一覧） | クエリーで`username`、`token` |
+| お気に入り | `GET https://calmradio.com/player/favorites.php` | クエリーで`login`、`token`、`action`（`list`、`add`、`remove`）、`id` |
+| オーディオブックの進捗 | `POST v2/story`、`POST v2/chapter` | JSONの文字列を本文として送る（`Content-Type`はjQueryの既定のまま）。`username`、`token`、`channel_id`など |
+
+- `v2/check`は、成功すると`{"license_count": 1, "status": 0, "ids": [...]}`の形で返ります。認証情報が違う場合も200で、`{"error": "V2_ERROR_CREDENTIALS_INVALID"}`が返ります。
+- `v2/last_channels`は、成功すると`channels`、`chapters`、`stories`をキーに持つオブジェクトを返します。トークンが違う場合は500で、本文は空です。
+
+### CRPのログイン方法の妥当性
+
+次の確認は、すべて有料会員のアカウント1件で行いました。無料会員のアカウントでは確認していません。
+
+- CRPは`get_token`でトークンを取得しています。このトークンを`v2/check`と`v2/last_channels`に渡したところ、どちらも正常に応答しました（`license_count`は1）。誤ったトークンでは、上に書いたエラーになります。
+- `get_token`を2回呼んだところ、同じトークンが返りました。`get_token`で取得するトークンは、呼び出すたびに変わるものではないと思われます。
+- Chromeで公式サイトにログインしたときの`ice-token`と比べたところ、文字列は一致しませんでした。どちらも16進数の96文字で、形式は同じです。
+  - `ice-login`はログインに使ったユーザー名（この場合はメールアドレス）で、`get_token`に渡したものと同じでした。
+  - 2つのトークンは同時に有効で、どちらを使っても`v2/check`、`v2/last_channels`、有料ストリーム（クエリー文字列と`ユーザー名:トークン@`の両方）が正常に応答しました。
+  - トークンはアカウントに1つではなく、ログインの方法や時期によって別のものが発行され、それぞれが有効と考えられます。トークンの有効期限や、Webからログアウトしたときに`ice-token`が無効になるかどうかは確認していません。
+- 以上から、`get_token`のトークンはWebの`ice-token`と同じ種類のものとして扱えます。CRPのログイン方法は、v2のAPIの使い方としても妥当です。
+- 有料ストリームは、認証情報がないと401になります。クエリー文字列（`?user=&pass=`）でも`ユーザー名:トークン@`の形でも再生でき、誤ったトークンでは401になります。
+- 無料ストリームは、認証情報がなくても、`ユーザー名:トークン@`を付けても再生できます。
+- 公式Webプレイヤーとの違いは次のとおりです。
+  - 有料会員かどうかを、CRPは`get_token`の`membership`で判定しています。
+  - 有料ストリームの認証情報を、CRPはクエリー文字列ではなく`ユーザー名:トークン@`の形でURLに埋め込んでいます。
+  - CRPは、有料会員でない場合に無料ストリームを再生するときも、ログインしていれば認証情報を付けています。公式は付けていません。無料会員のアカウントで認証情報を付けて再生できるかどうかは、確認していません。
+  - CRPはTuneIn経由の再生を使いません。また、`free`が空のチャンネルは、別のチャンネルに切り替えず、再生できない旨を表示します。
+
 ## CRPでの使い方
 
 `calmradio/main.py`の`getAllChannels()`で、次のようにツリーを組み立てています。
@@ -100,7 +169,8 @@ APIが変わってチャンネル一覧などが取得できなくなった場�
 1. `https://calmradio.com/en/`のHTMLを取得し、`<body>`の`data-channels-api-version`属性と`data-stories-api-version`属性を確認する。2026年10月時点では、どちらも`v2`。
 2. HTMLが読み込んでいる`templates/calmradio/js/main.js`を取得し、`https://api.calmradio.com/`を含む文字列を検索する。`loadChannels`、`loadCategories`、`loadStories`という関数で、APIのURLを組み立てている。
 3. ストリームのURLの組み立て方は、`main.js`の中で`streamUrl=`、`.vip`、`.free`を検索すると見つかる。
-4. 見つけたURLのレスポンスを取得し、上の構造と比べる。
+4. ログインと認証の方法は、`main.js`の中で`ice-token`、`user.token`、`calmradio_login`を検索すると見つかる。
+5. 見つけたURLのレスポンスを取得し、上の構造と比べる。
 
 ## 旧API（v1）
 
