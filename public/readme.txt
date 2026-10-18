@@ -1,7 +1,7 @@
 		Calm Radio Player -CRP-
 
-	バージョン:　　ver.1.0.0
-	リリース:　　　2022-04-29
+	バージョン:　　ver.1.1.0
+	リリース:　　　2026-10-18
 	開発・配布元:　ACT Laboratory　(https://actlab.org/)
 	主要開発者:　　北畠一翔
 　　ソフト種別:　　オープンソースソフトウェア　(GitHubリポジトリ:https://github.com/actlaboratory/CRP/)
