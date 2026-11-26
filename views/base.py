@@ -113,6 +113,9 @@ class BaseMenu(object):
 		if self.keymap.addFile(constants.KEYMAP_FILE_NAME)!=errorCodes.OK:
 			self.keymap.addDict(defaultKeymap.defaultKeymap)
 			self.keymap.SaveFile(constants.KEYMAP_FILE_NAME)
+		else:
+			#以前のバージョンで作られたファイルには、後から追加したコマンドの項目がないため、既定のキーを補う
+			self.keymap.addMissingDefaults(constants.KEYMAP_FILE_NAME,defaultKeymap.defaultKeymap)
 		errors=self.keymap.GetError(self.keymap_identifier)
 		if errors:
 			tmp=_(constants.KEYMAP_FILE_NAME+"で設定されたショートカットキーが正しくありません。キーの重複、存在しないキー名の指定、使用できないキーパターンの指定などが考えられます。以下のキーの設定内容をご確認ください。\n\n")

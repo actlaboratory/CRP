@@ -377,6 +377,53 @@ class KeymapHandlerBase():
 					self.add(identifier,elem[0],elem[1])
 		return errorCodes.OK
 
+	def addMissingDefaults(self,filename,dict,sections=None):
+		"""
+			addFileで読み込んだファイルに項目そのものがないコマンドに、dictの既定のキーを追加する。
+			新しいバージョンで追加したコマンドに、既存のキーマップのファイルでも既定のキーを割り当てるために使う。
+			追加した場合は、ファイルにも保存する。
+			・値が空の項目は、ユーザーが割り当てを外したものなので追加しない。
+			・既定のキーがほかのコマンドで使われている場合は、ユーザーの設定を優先してそのキーを追加しない。
+			  起動のたびにエラーを表示しないよう、ログに記録するだけにする。
+			sectionsの扱いはaddFileと同じ。
+			追加したものがあればTrueを返す。
+		"""
+		fileKeys=configparser.ConfigParser()
+		try:
+			if not fileKeys.read(filename, encoding="UTF-8"):
+				return False
+		except configparser.Error:
+			self.log.warning("Cannot parse %s" % filename)
+			return False
+
+		#セクション名と項目名は大文字・小文字を区別しないので大文字に統一して比べる
+		existing={}
+		for identifier in fileKeys.sections():
+			existing.setdefault(identifier.upper(),set()).update(k.upper() for k in fileKeys.options(identifier))
+
+		defaults=configparser.ConfigParser()
+		defaults.read_dict(dict)
+		added=False
+		for identifier in defaults.sections():
+			if (sections and (identifier.upper() not in sections)) or ((not sections) and "HOTKEY" in identifier):
+				continue
+			for ref,key in defaults.items(identifier):
+				if key=="" or ref.upper() in existing.get(identifier.upper(),set()):
+					continue
+				for e in key.split("/"):
+					entry=self.makeEntry(ref.upper(),e,self.filter,self.log)
+					if entry==False:
+						continue
+					if entry in self.entries.get(identifier.upper(),[]):
+						self.log.info("Skip default key %s=%s in %s because the key is already used" % (ref,e,identifier))
+						continue
+					self.log.info("Add default key %s=%s in %s" % (ref,e,identifier))
+					self.add(identifier,ref,e)
+					added=True
+		if added:
+			self.SaveFile(filename)
+		return added
+
 	def SaveFile(self,fileName):
 		"""
 			指定した名前でキーマップの保存を試みる
@@ -384,13 +431,18 @@ class KeymapHandlerBase():
 		"""
 		c=configparser.ConfigParser()
 		try:
-			別セクションがあればそれを残せるので一応読み込んでおく
-			c.read(fileName)
+			#別セクションがあればそれを残せるので一応読み込んでおく
+			#（以前は先頭の#が抜けていてNameErrorになり、読み込まれていなかった。
+			#ファイルがないときにしか呼ばれていなかったため表に出なかったが、既存のファイルに保存すると
+			#HOTKEYのセクションや、割り当てを外した空の値の行が消えてしまう）
+			c.read(fileName, encoding="UTF-8")
 		except:
 			#ファイル不存在等だが問題なし
 			pass
 		for section in self.entries.keys():
-			c.add_section(section)
+			#読み込んだファイルに同じセクションがある場合は、そのセクションの値を上書きする
+			if not c.has_section(section):
+				c.add_section(section)
 			for entry in self.entries[section]:
 				c[section][entry.refName]=self.map[section][entry.refName]
 		try:

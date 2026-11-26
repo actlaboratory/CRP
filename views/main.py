@@ -47,6 +47,8 @@ class MainView(BaseView):
 	def applyHotKey(self):
 		self.hotkey = hotkeyHandler.HotkeyHandler(None, hotkeyHandler.HotkeyFilter().SetDefault())
 		if self.hotkey.addFile(constants.KEYMAP_FILE_NAME, ["HOTKEY"]) == errorCodes.OK:
+			# 以前のバージョンで作られたファイルには、後から追加したコマンドの項目がないため、既定のキーを補う
+			self.hotkey.addMissingDefaults(constants.KEYMAP_FILE_NAME, defaultKeymap.defaultKeymap, ["HOTKEY"])
 			errors = self.hotkey.GetError("HOTKEY")
 			if errors:
 				tmp = _(constants.KEYMAP_FILE_NAME + "で設定されたホットキーが正しくありません。キーの重複、存在しないキー名の指定、使用できないキーパターンの指定などが考えられます。以下のキーの設定内容をご確認ください。\n\n")
