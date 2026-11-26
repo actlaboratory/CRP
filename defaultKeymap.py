@@ -10,6 +10,7 @@ defaultKeymap["mainView"] = {
 	"PLAY_PLAY": "ctrl+p",
 	"PLAY_STOP": "ctrl+s",
 	"PLAY_MUTE": "ctrl+m",
+	"PLAY_ALTERNATIVE_STREAM": "ctrl+shift+a",
 	"PLAY_COPY_URL": "ctrl+shift+c",
 
 	"OPTION_OPTION": "",
@@ -27,4 +28,5 @@ defaultKeymap["HOTKEY"] = {
 	"PLAY_PLAY": "",
 	"PLAY_STOP": "",
 	"PLAY_MUTE": "",
+	"PLAY_ALTERNATIVE_STREAM": "",
 }

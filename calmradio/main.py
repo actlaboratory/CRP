@@ -124,7 +124,27 @@ class Channel:
     def getName(self):
         return self._data["title"].strip()
 
-    def _getVipStream(self):
+    def _getAlternativeStream(self):
+        """代替ストリームを返す。ない場合はNone
+
+        公式Webプレイヤーはvip[1]だけを使うが、vip[1]がvip[0]と同じIDで、
+        vip[2]以降に別のIDがあるチャンネルがある。そのようなチャンネルでも
+        切り替えられるよう、vip[0]とIDが違う最初のストリームを代替ストリームとする。
+        """
+        vip = self._data["vip"]
+        for stream in vip[1:]:
+            if stream["id"] != vip[0]["id"]:
+                return stream
+        return None
+
+    def hasAlternativeStream(self):
+        return self._getAlternativeStream() is not None
+
+    def _getVipStream(self, alternative=False):
+        if alternative:
+            stream = self._getAlternativeStream()
+            if stream:
+                return stream
         return self._data["vip"][0]
 
     def _getFreeStream(self):
@@ -137,22 +157,27 @@ class Channel:
 
     def getRecentTracks(self):
         ret = {"vip": self._getVipStream()["recent_tracks"]}
+        alternative = self._getAlternativeStream()
+        if alternative:
+            ret["alternative"] = alternative["recent_tracks"]
         free = self._getFreeStream()
         if free:
             ret["free"] = free["recent_tracks"]
         return ret
 
-    def generatePlaybackUrl(self, calmradio, config):
+    def generatePlaybackUrl(self, calmradio, config, alternative=False):
         """再生URLを生成する
         
         Args:
             calmradio: Calmradioオブジェクト（認証情報を取得するため）
             config: ConfigManagerオブジェクト（設定を取得するため）
+            alternative: Trueの場合、代替ストリームのURLを生成する。
+                プレミアム会員でない場合や、代替ストリームがない場合は無視する
         
         Returns:
             tuple: (url, recentKey, errorCode)
             - url: 生成されたURL（エラー時はNone）
-            - recentKey: "vip"または"free"（エラー時はNone）
+            - recentKey: "vip"、"alternative"、"free"のいずれか（エラー時はNone）
             - errorCode: エラーコード（成功時はNone）
         """
         import urllib.parse
@@ -166,8 +191,12 @@ class Channel:
         if calmradio.isActive():
             # premium
             bitrate = config.getstring("play", "bitrate", "320", constants.AVAILABLE_BITRATE)
-            url = self._getVipStream()["streams"][bitrate]
-            recentKey = "vip"
+            if alternative and self.hasAlternativeStream():
+                url = self._getVipStream(True)["streams"][bitrate]
+                recentKey = "alternative"
+            else:
+                url = self._getVipStream()["streams"][bitrate]
+                recentKey = "vip"
         else:
             free = self._getFreeStream()
             if not free:

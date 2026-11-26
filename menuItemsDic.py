@@ -17,6 +17,7 @@ dic = {
 	"PLAY_PLAY": _("選択中のチャンネルを再生(&P)"),
 	"PLAY_STOP": _("停止(&S)"),
 	"PLAY_MUTE": _("ミュート(&M)"),
+	"PLAY_ALTERNATIVE_STREAM": _("代替ストリームで再生(&A)"),
 	"PLAY_COPY_URL": _("再生URLのコピー(&U)"),
 	"PLAY_CHANGE_DEVICE": _("再生デバイスの変更(&D)"),
 

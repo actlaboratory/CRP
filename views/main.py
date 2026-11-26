@@ -164,6 +164,9 @@ class Menu(BaseMenu):
 			"PLAY_PLAY",
 			"PLAY_STOP",
 			"PLAY_MUTE",
+		])
+		self.RegisterCheckMenuCommand(self.hPlayMenu, "PLAY_ALTERNATIVE_STREAM")
+		self.RegisterMenuCommand(self.hPlayMenu, [
 			"PLAY_COPY_URL",
 		])
 		self.hDeviceMenu = wx.Menu()
@@ -190,6 +193,14 @@ class Menu(BaseMenu):
 		self.hMenuBar.Append(self.hHelpMenu, _("ヘルプ(&H)"))
 		target.SetMenuBar(self.hMenuBar)
 
+		# キー設定の変更などでメニューを作り直したときも、再生中の状態を反映する
+		self.updateAlternativeStreamMenu()
+
+	def updateAlternativeStreamMenu(self):
+		"""[代替ストリームで再生]の有効／無効とチェックを、再生中の状態に合わせる"""
+		self.EnableMenu("PLAY_ALTERNATIVE_STREAM", self.event.playingChannel is not None)
+		self.CheckMenu("PLAY_ALTERNATIVE_STREAM", self.event.playingAlternative)
+
 
 class Events(BaseEvents):
 	def __init__(self, parent, identifier):
@@ -198,6 +209,9 @@ class Events(BaseEvents):
 		self.playbackStatusChecker = None
 		self.devices = {}
 		self.muteFlag = False
+		# 再生中のチャンネルと、代替ストリームで再生しているかどうか。停止中はNoneとFalse
+		self.playingChannel = None
+		self.playingAlternative = False
 
 	def OnMenuSelect(self, event):
 		"""メニュー項目が選択されたときのイベントハンドら。"""
@@ -222,6 +236,9 @@ class Events(BaseEvents):
 
 		if selected == menuItemsStore.getRef("PLAY_MUTE"):
 			self.onMuteButton()
+
+		if selected == menuItemsStore.getRef("PLAY_ALTERNATIVE_STREAM"):
+			self.onAlternativeStream()
 
 		if selected == menuItemsStore.getRef("PLAY_COPY_URL"):
 			# 選択中のチャンネルを取得
@@ -400,9 +417,31 @@ class Events(BaseEvents):
 		if item is None:
 			event.Skip()
 			return
-		
+		# チャンネルを切り替えたときは、通常のストリームに戻す
+		self._play(item)
+
+	def onAlternativeStream(self):
+		"""再生中のチャンネルを、代替ストリームと通常のストリームで切り替える"""
+		channel = self.playingChannel
+		if channel is None:
+			return
+		if not self.playingAlternative:
+			# 有料会員かどうかは、直前に再生したときの認証の結果で判定する
+			if not self.parent.app.calmradio.isActive():
+				dialog(_("代替ストリームで再生"), _("代替ストリームは、プレミアムアカウントでのみご利用いただけます。"))
+			elif not channel.hasAlternativeStream():
+				dialog(_("代替ストリームで再生"), _("このチャンネルには、代替ストリームがありません。"))
+			else:
+				self._play(channel, True)
+		else:
+			self._play(channel, False)
+		# チェック式のメニューは選択しただけでチェックが切り替わるため、切り替えなかった場合も状態を合わせ直す
+		self.parent.menu.updateAlternativeStreamMenu()
+
+	def _play(self, item, alternative=False):
+		"""チャンネルを再生する。alternativeがTrueの場合は、代替ストリームで再生する"""
 		# URLを生成（モデル層のメソッドを使用）
-		url, recentKey, error = item.generatePlaybackUrl(self.parent.app.calmradio, self.parent.app.config)
+		url, recentKey, error = item.generatePlaybackUrl(self.parent.app.calmradio, self.parent.app.config, alternative)
 		if error == errorCodes.CONNECTION_ERROR:
 			errorDialog(_("ログインに失敗しました。\nインターネット接続をご確認の上、しばらくたってから再度お試しください。\nこの問題が繰り返し発生する場合は、開発者までご連絡ください。"))
 			return
@@ -425,7 +464,14 @@ class Events(BaseEvents):
 		self.playbackStatusChecker.start()
 		self.parent.stopButton.Enable()
 		self.parent.menu.EnableMenu("PLAY_STOP", True)
-		self.parent.nowPlaying.SetItem(3, 1, item.getName())
+		self.playingChannel = item
+		# 代替ストリームがないなどの理由で、通常のストリームを再生した場合はFalse
+		self.playingAlternative = recentKey == "alternative"
+		self.parent.menu.updateAlternativeStreamMenu()
+		name = item.getName()
+		if self.playingAlternative:
+			name += _("（代替ストリーム）")
+		self.parent.nowPlaying.SetItem(3, 1, name)
 
 	def onStopButton(self, event=None):
 		if event:
@@ -433,6 +479,9 @@ class Events(BaseEvents):
 			globalVars.app.player.stop()
 		self.parent.stopButton.Disable()
 		self.parent.menu.EnableMenu("PLAY_STOP", False)
+		self.playingChannel = None
+		self.playingAlternative = False
+		self.parent.menu.updateAlternativeStreamMenu()
 
 	def onNowPlayingChanged(self, data):
 		self.parent.nowPlaying.Enable()
